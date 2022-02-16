@@ -15,6 +15,22 @@ class CreateSingleSendsTable extends Migration
     {
         Schema::create('single_sends', function (Blueprint $table) {
             $table->id();
+            $table->string('sendgrid_id');
+            $table->string('name');
+            $table->string('status')->nullable();
+            $table->string('categories')->nullable();
+            $table->string('list_ids');
+            $table->string('segment_ids')->nullable();
+            $table->boolean('send_all')->nullable();
+            $table->string('subject');
+            $table->string('suppression_group_id');
+            $table->string('sender_id');
+            $table->longText('html_content');
+            $table->longText('plain_content')->nullable();
+            $table->boolean('generate_plain_content')->nullable();
+            $table->string('custom_unsubscribe_url')->nullable();
+            $table->string('ip_pool')->nullable();
+            $table->string('editor')->nullable();
             $table->timestamps();
         });
     }

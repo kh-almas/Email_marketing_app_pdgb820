@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Actions\SendGrid\Sender_Verification;
 use App\Http\Controllers\Controller;
+use App\Models\SenderVerification;
 use Illuminate\Http\Request;
 
 class senderVerificationController extends Controller
 {
+    private $sender;
+
+    public function __construct(Sender_Verification $sender)
+    {
+        $this->sender = $sender;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,8 @@ class senderVerificationController extends Controller
      */
     public function index()
     {
-        //
+        $senderVerification = SenderVerification::latest()->paginate('15');
+        return view('layouts.backend.senderVerification.index',compact('senderVerification'));
     }
 
     /**
@@ -24,7 +34,7 @@ class senderVerificationController extends Controller
      */
     public function create()
     {
-        //
+        return view('layouts.backend.senderVerification.create');
     }
 
     /**
@@ -35,18 +45,19 @@ class senderVerificationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->sender->createSenderVerification($request);
+        return redirect()->route('dashboard.sender-verification.index')->with('success','Sender verification added');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\SenderVerification $sender_verification
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(SenderVerification $sender_verification)
     {
-        //
+        return view('layouts.backend.senderVerification.view',compact('sender_verification'));
     }
 
     /**
@@ -57,7 +68,7 @@ class senderVerificationController extends Controller
      */
     public function edit($id)
     {
-        //
+        abort('404');
     }
 
     /**
@@ -69,17 +80,20 @@ class senderVerificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        abort('404');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\SenderVerification $sender_verification
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(SenderVerification $sender_verification)
     {
-        //
+        $this->sender->deleteSenderVerification($sender_verification->sendgrid_id);
+        $sender_verification->delete();
+        return redirect()->route('dashboard.sender-verification.index')->with('danger','Sender verification deleted');
+
     }
 }

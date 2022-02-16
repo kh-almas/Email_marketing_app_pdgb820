@@ -21,6 +21,8 @@ Route::resource('/email',emailController::class);
 Route::resource('/email_list',emailListController::class);
 Route::post('/get_sendgrid_id/{id}',[emailController::class, 'getSendgridId'])->name('email.getSendgridId');
 Route::resource('/single-sends',SingleSendController::class);
+Route::get('single-sends/view/mail/{mailId}',[SingleSendController::class , 'viewMail'])->name('viewMail');
+Route::post('/datetime',[SingleSendController::class, 'datetime'])->name('datetime');
 Route::post('/single-sends/update/single-send',[SingleSendController::class, 'updateSchedule'])->name('single-sends.updateSchedule');
 Route::resource('/suppression-group',suppressionGroupController::class);
 Route::resource('/sender-verification',senderVerificationController::class);

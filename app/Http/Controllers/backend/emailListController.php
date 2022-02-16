@@ -46,7 +46,7 @@ class emailListController extends Controller
      */
     public function store(addemailListRequest $request)
     {
-        $response = $this->list->addContactList($request->name);
+        $this->list->addContactList($request->name);
         return redirect()->route('dashboard.email_list.index')->with('success','Email list added');
     }
 

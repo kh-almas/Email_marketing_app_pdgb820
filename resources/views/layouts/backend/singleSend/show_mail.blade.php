@@ -1,0 +1,1 @@
+{!! $mailId->html_content !!}
