@@ -31,6 +31,8 @@ class CreateSingleSendsTable extends Migration
             $table->string('custom_unsubscribe_url')->nullable();
             $table->string('ip_pool')->nullable();
             $table->string('editor')->nullable();
+            $table->boolean('is_send')->nullable();
+            $table->dateTime('send_at')->nullable();
             $table->timestamps();
         });
     }

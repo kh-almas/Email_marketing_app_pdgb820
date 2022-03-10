@@ -6,6 +6,7 @@ use App\Actions\SendGrid\Contact;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\addEmailRequest;
 use App\Http\Requests\updateEmailRequest;
+use App\Models\Clist;
 use App\Models\Email;
 use App\Models\EmailList;
 use Illuminate\Http\Request;
@@ -45,17 +46,17 @@ class emailController extends Controller
      */
     public function create()
     {
-        $contactList = EmailList::all();
+        $contactList = Clist::all();
         return view('layouts.backend.email.create',compact('contactList'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $info
      * @return \\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
-    public function store(addEmailRequest $request)
+    public function store(Request $request)
     {
         $this->contact->addContact($request);
         return redirect()->route('dashboard.email.index')->with('success','Email Listed');
@@ -69,6 +70,9 @@ class emailController extends Controller
      */
     public function show(Email $email)
     {
+
+        //$dfgsf = Email::where('id', $email)->get();
+        //return $email;
         return view('layouts.backend.email.view',compact('email'));
     }
 

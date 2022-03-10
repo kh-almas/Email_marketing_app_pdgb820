@@ -17,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::view('/multiselect','layouts.multiselect');
+
 Route::resource('/email',emailController::class);
 Route::resource('/email_list',emailListController::class);
 Route::post('/get_sendgrid_id/{id}',[emailController::class, 'getSendgridId'])->name('email.getSendgridId');
 Route::resource('/single-sends',SingleSendController::class);
 Route::get('single-sends/view/mail/{mailId}',[SingleSendController::class , 'viewMail'])->name('viewMail');
-Route::post('/datetime',[SingleSendController::class, 'datetime'])->name('datetime');
-Route::post('/single-sends/update/single-send',[SingleSendController::class, 'updateSchedule'])->name('single-sends.updateSchedule');
+Route::post('/single-sends/update/single-send/Schedule/set',[SingleSendController::class, 'updateSchedule'])->name('single-sends.updateSchedule');
+Route::post('/single-sends/update/single-send/Schedule/cancel',[SingleSendController::class, 'cancelSchedule'])->name('single-sends.cancelSchedule');
 Route::resource('/suppression-group',suppressionGroupController::class);
 Route::resource('/sender-verification',senderVerificationController::class);

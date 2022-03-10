@@ -13,26 +13,6 @@
 
                     <a href="{{ route('dashboard.single-sends.create') }}" type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Create</a>
 
-
-                    <form action="{{ route('dashboard.sender-verification.store') }}" method="post">
-                        @csrf
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">sender-verification</button>
-                    </form>
-                    <form action="{{ route('dashboard.single-sends.store') }}" method="post">
-                        @csrf
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                    </form>
-                    <form action="{{ route('dashboard.single-sends.updateSchedule') }}" method="post" class="mt-8">
-                        @csrf
-                        <input name="singleSendID" type="text" id="singleSendID" value="{{ old('singleSendID') }}" class="@error('singleSendID') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Please enter Single Send ID.">
-                        @error('singleSendID')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                        <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update Schedule</button>
-                    </form>
-
-
-
                     <div class="flex flex-col">
                         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
@@ -41,7 +21,7 @@
                                         <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
                                             <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                                Email
+                                                Single Send
                                             </th>
                                             <th scope="col" class="py-3 px-6 text-right text-xs font-medium tracking-wider text-gray-700 uppercase dark:text-gray-400">
                                                 Action
@@ -66,6 +46,20 @@
                                                             </li>
                                                             <li>
                                                                 <a href="{{ route('dashboard.single-sends.show',$singleSend->id) }}" class="flex justify-center py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">View</a>
+                                                            </li>
+                                                            <li>
+                                                                <form action="{{ route('dashboard.single-sends.updateSchedule') }}" method="post">
+                                                                    @csrf
+                                                                    <input name="singleSendID" type="hidden" id="singleSendID" value="{{ $singleSend->sendgrid_id }}">
+                                                                    <button type="submit" onclick="return confirm('Mail will start sending after 5 minutes')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Schedule</button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <form action="{{ route('dashboard.single-sends.cancelSchedule') }}" method="post">
+                                                                    @csrf
+                                                                    <input name="singleSendID" type="hidden" id="singleSendID" value="{{ $singleSend->sendgrid_id }}">
+                                                                    <button type="submit" onclick="return confirm('Wanna cancel mail schedule')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Unscheduled</button>
+                                                                </form>
                                                             </li>
                                                             <li>
                                                                 <form action="{{ route('dashboard.single-sends.destroy',$singleSend->id) }}" method="POST">

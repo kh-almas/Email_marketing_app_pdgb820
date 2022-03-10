@@ -4,12 +4,11 @@ namespace App\Http\Controllers\backend;
 
 use App\Actions\SendGrid\Single_Send;
 use App\Http\Controllers\Controller;
-use App\Models\EmailList;
+use App\Models\Clist;
 use App\Models\SenderVerification;
 use App\Models\SingleSend;
 use App\Models\SuppressionGroup;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SingleSendController extends Controller
 {
@@ -18,11 +17,6 @@ class SingleSendController extends Controller
     public function __construct(Single_Send $singleSend)
     {
         $this->singleSend = $singleSend;
-    }
-
-    public function datetime(Request $request)
-    {
-        return $request;
     }
 
 
@@ -46,7 +40,7 @@ class SingleSendController extends Controller
      */
     public function create()
     {
-        $contactList = EmailList::latest()->get();
+        $contactList = Clist::latest()->get();
         $suppression_group_id = SuppressionGroup::latest()->get();
         $sender = SenderVerification::latest()->get();
         return view('layouts.backend.singleSend.create',compact('contactList','suppression_group_id','sender'));
@@ -67,8 +61,15 @@ class SingleSendController extends Controller
 
     public function updateSchedule(Request $request)
     {
-        $response = $this->singleSend->addSingleSend($request->singleSendID);
-        return $response;
+        $this->singleSend->scheduleSingleSends($request->singleSendID);
+        return redirect()->route('dashboard.single-sends.index')->with('success','Single send scheduled for sent after 5 minutes');
+    }
+
+
+    public function cancelSchedule(Request $request)
+    {
+        $this->singleSend->unscheduledSingleSends($request->singleSendID);
+        return redirect()->route('dashboard.single-sends.index')->with('danger','Single send schedule is cancel');
     }
 
     /**
@@ -80,7 +81,7 @@ class SingleSendController extends Controller
     public function show(SingleSend $single_send)
     {
         //$list = DB::Table('single_sends')->where('sendgrid_id', $single_send->list_ids)->select('name')->get();
-        $list = EmailList::where('sendgrid_id', $single_send->list_ids)->firstOrFail();
+        $list = Clist::where('sendgrid_id', $single_send->list_ids)->firstOrFail();
         $suppression = SuppressionGroup::where('sendgrid_id', $single_send->suppression_group_id)->firstOrFail();
         $sender = SenderVerification::where('sendgrid_id', $single_send->sender_id)->firstOrFail();
         return view('layouts.backend.singleSend.view',compact('single_send','list','suppression','sender'));
@@ -108,7 +109,7 @@ class SingleSendController extends Controller
 //        return $single_send;
 //        return view('layouts.backend.singleSend.edit',compact('single_send'));
 
-        $contactList = EmailList::latest()->get();
+        $contactList = Clist::latest()->get();
         $suppression_group_id = SuppressionGroup::latest()->get();
         $sender = SenderVerification::latest()->get();
         return view('layouts.backend.singleSend.edit',compact('single_send','contactList','suppression_group_id','sender'));
@@ -132,11 +133,13 @@ class SingleSendController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\SingleSend  $single_send
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(SingleSend $single_send)
     {
-        //
+        $this->singleSend->deleteSingleSend($single_send->sendgrid_id);
+        $single_send->delete();
+        return redirect()->route('dashboard.single-sends.index')->with('danger','Single send Deleted');
     }
 }

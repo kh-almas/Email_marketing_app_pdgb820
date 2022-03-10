@@ -13,6 +13,7 @@ class Email extends Model
         'is_uploaded_in_sendgrid',
         'first_name',
         'last_name',
+        'clist',
         'email',
         'address_line_one',
         'address_line_two',
@@ -31,4 +32,9 @@ class Email extends Model
         'sendgrid_metadata',
 
     ];
+
+    public function lists()
+    {
+        return $this->belongsToMany(Clist::class);
+    }
 }

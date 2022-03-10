@@ -2,7 +2,7 @@
 
 namespace App\Actions\SendGrid;
 
-use App\Models\EmailList;
+use App\Models\Clist;
 use Illuminate\Support\Facades\Http;
 
 class ContactList
@@ -29,7 +29,7 @@ class ContactList
 
         //return $response;
 
-        EmailList::create([
+        Clist::create([
             'name' => $response['name'],
             'sendgrid_id' => $response['id'],
             'sendgrid_contact_count' =>$response['contact_count'],

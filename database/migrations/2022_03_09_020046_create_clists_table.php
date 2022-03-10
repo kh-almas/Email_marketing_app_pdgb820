@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmailListsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEmailListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_lists', function (Blueprint $table) {
+        Schema::create('clists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('sendgrid_id')->nullable();
@@ -30,6 +30,6 @@ class CreateEmailListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_lists');
+        Schema::dropIfExists('clists');
     }
-}
+};

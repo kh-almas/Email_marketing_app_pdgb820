@@ -3,6 +3,7 @@
 namespace App\Actions\SendGrid;
 
 use App\Models\SingleSend;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class Single_Send
@@ -80,13 +81,41 @@ class Single_Send
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID.'/schedule';
 
+        $dateTime = now()->addSeconds('300');
+
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, [
-            'send_at' => now()->addSeconds('180'),
+            'send_at' => $dateTime,
         ]);
 
-        dd($response->body());
+        $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
+
+        $forUpdate->update([
+            'is_send' => 1,
+            'send_at' => $dateTime->toDateTimeString(),
+        ]);
+    }
+
+
+    public function unscheduledSingleSends($singleSendID)
+    {
+        $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID.'/schedule';
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->delete($url);
+
+        $dateTime = now()->addSeconds('300');
+
+        $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
+
+        if($forUpdate->send_at < $dateTime)
+        {
+            $forUpdate->update([
+                'is_send' => 0,
+            ]);
+        }
     }
 
     public function duplicateSingleSend($singleSendID)
@@ -144,6 +173,15 @@ class Single_Send
             'ip_pool' => $response['email_config']['ip_pool'],
             'editor' => $response['email_config']['editor'],
         ]);
+    }
+
+    public function deleteSingleSend($singleSendID)
+    {
+        $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID;
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->delete($url);
     }
 
 

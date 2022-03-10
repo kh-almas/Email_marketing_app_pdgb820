@@ -11,13 +11,10 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <a href="{{ route('dashboard.viewMail',$single_send->id) }}" type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">View Template</a>
 
-                    <form action="{{ route('dashboard.datetime') }}" method="post">
-                        @csrf
-                        <label for="birthdaytime">Birthday (date and time):</label>
-                        <input type="time" id="birthdaytime" name="birthdaytime">
-                        <button type="submit">submit</button>
-                    </form>
                     <div class="py-6">
+                        <div class="py-4">
+                            <p><span class="font-semibold">SendGrid Id:</span> {{ $single_send->sendgrid_id }}</p>
+                        </div>
                         <div class="py-4">
                             <p><span class="font-semibold">List Id:</span> {{ $list->name }}</p>
                         </div>

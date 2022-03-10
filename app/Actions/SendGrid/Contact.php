@@ -30,27 +30,27 @@ class Contact
 
     public function addContact($info)
     {
-        $url = $this->baseURL.'/v3/marketing/contacts';
+//        $url = $this->baseURL.'/v3/marketing/contacts';
 
-        $data = [
-            'list_ids' => [
-                $info->list_ids,
-            ],
-            'contacts' => [
-                [
-                    'email' => $info->email,
-                ]
-            ],
-        ];
-
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-        ])->put($url, $data);
+//        $data = [
+//            'list_ids' => [
+//                $info->list_ids,
+//            ],
+//            'contacts' => [
+//                [
+//                    'email' => $info->email,
+//                ]
+//            ],
+//        ];
+//
+//        $response = Http::withHeaders([
+//            'Authorization' => "Bearer {$this->apiKey}",
+//        ])->put($url, $data);
 
         //dd($response->body());
 
 
-        Email::create([
+        $email = Email::create([
             'first_name' => $info->first_name,
             'last_name' => $info->last_name,
             'email' => $info->email,
@@ -68,6 +68,8 @@ class Contact
             'list_ids' => $info->list_ids,
             'unique_name' => $info->unique_name,
         ]);
+
+        $email->lists()->syncWithoutDetaching($info->clist);
     }
 
     public function getSendgridId($contact)

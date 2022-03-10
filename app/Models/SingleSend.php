@@ -26,5 +26,7 @@ class SingleSend extends Model
         'custom_unsubscribe_url',
         'ip_pool',
         'editor',
+        'is_send',
+        'send_at',
     ];
 }

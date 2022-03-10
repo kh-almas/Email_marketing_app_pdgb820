@@ -25,6 +25,31 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
+
+
+                        <div class="mb-6">
+                            <label for="lists" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select Lists</label>
+                            <select
+                                id="select-role"
+                                name="clist[]"
+                                placeholder="Select roles..."
+                                autocomplete="off"
+                                class="block w-full rounded-sm cursor-pointer focus:outline-none"
+                                multiple
+                            >
+                                @forelse($contactList as $list)
+                                    <option value="{{ $list->id }}">{{ $list->name }}</option>
+                                @empty
+                                    <option>There don't have any list</option>
+                                @endforelse
+                            </select>
+                        </div>
+
+
+
+
+
+
                         <div class="mb-6">
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">First Name</label>
                             <input name="first_name" type="text" id="first_name" value="{{ old('first_name') }}" class="@error('first_name') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Please enter your first name.">
