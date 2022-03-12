@@ -25,4 +25,9 @@ class smtpController extends Controller
 //        }
         return 'check inbox job mail now';
     }
+
+    public function aaaaaa()
+    {
+        return 'abc';
+    }
 }

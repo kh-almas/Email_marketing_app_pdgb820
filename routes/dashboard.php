@@ -28,3 +28,4 @@ Route::post('/single-sends/update/single-send/Schedule/set',[SingleSendControlle
 Route::post('/single-sends/update/single-send/Schedule/cancel',[SingleSendController::class, 'cancelSchedule'])->name('single-sends.cancelSchedule');
 Route::resource('/suppression-group',suppressionGroupController::class);
 Route::resource('/sender-verification',senderVerificationController::class);
+///Route::get('/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend');

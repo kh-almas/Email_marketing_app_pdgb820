@@ -14,6 +14,8 @@ class Sender_Verification
         $this->apiKey = config('services.sendgrid.apiKey');
         $this->baseURL = 'https://api.sendgrid.com';
     }
+
+
     public function createSenderVerification($info)
     {
         $url = $this->baseURL.'/v3/verified_senders';
@@ -57,6 +59,35 @@ class Sender_Verification
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
+    }
+
+
+    public function getAllSingleSend()
+    {
+        $url = $this->baseURL.'/v3/verified_senders';
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->get($url);
+
+        $datas = $response['results'];
+        foreach ($datas as $data){
+            SenderVerification::firstOrCreate([
+                'sendgrid_id' => $data['id'],
+                'nickname' => $data['nickname'],
+                'from_email' => $data['from_email'],
+                'from_name' => $data['from_name'],
+                'reply_to' => $data['reply_to'],
+                'reply_to_name' => $data['reply_to_name'],
+                'address' => $data['address'],
+                'address2' => $data['address2'],
+                'state' => $data['state'],
+                'city' => $data['city'],
+                'country' => $data['country'],
+                'zip' => $data['zip'],
+                'verified' => $data['verified'],
+                'locked' => $data['locked'],
+            ]);
+        }
     }
 
 

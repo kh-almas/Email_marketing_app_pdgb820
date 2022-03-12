@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Actions\SendGrid\Sender_Verification;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\addSenderVerificationRequest;
 use App\Models\SenderVerification;
 use Illuminate\Http\Request;
 
@@ -40,10 +41,10 @@ class senderVerificationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param addSenderVerificationRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(addSenderVerificationRequest $request)
     {
         $this->sender->createSenderVerification($request);
         return redirect()->route('dashboard.sender-verification.index')->with('success','Sender verification added');
@@ -68,7 +69,7 @@ class senderVerificationController extends Controller
      */
     public function edit($id)
     {
-        abort('404');
+        //abort('404');
     }
 
     /**
@@ -80,7 +81,7 @@ class senderVerificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort('404');
+        //abort('404');
     }
 
     /**
@@ -95,5 +96,11 @@ class senderVerificationController extends Controller
         $sender_verification->delete();
         return redirect()->route('dashboard.sender-verification.index')->with('danger','Sender verification deleted');
 
+    }
+
+    public function getAllSingleSend()
+    {
+        $this->sender->getAllSingleSend();
+        return redirect()->route('dashboard.sender-verification.index')->with('success','Sender updated');
     }
 }
