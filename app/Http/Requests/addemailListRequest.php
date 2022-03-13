@@ -24,7 +24,7 @@ class addemailListRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:200|unique:email_lists',
+            'name' => 'required|max:200|unique:clists',
         ];
     }
 

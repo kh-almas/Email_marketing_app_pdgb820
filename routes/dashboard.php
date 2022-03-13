@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\backend\bounceController;
 use App\Http\Controllers\backend\emailController;
 use App\Http\Controllers\backend\emailListController;
 use App\Http\Controllers\backend\senderVerificationController;
 use App\Http\Controllers\backend\SingleSendController;
-use App\Http\Controllers\backend\suppressionGroupController;
+use App\Http\Controllers\backend\unsubscribeGroupsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,9 @@ Route::resource('/single-sends',SingleSendController::class);
 Route::get('single-sends/view/mail/{mailId}',[SingleSendController::class , 'viewMail'])->name('viewMail');
 Route::post('/single-sends/update/single-send/Schedule/set',[SingleSendController::class, 'updateSchedule'])->name('single-sends.updateSchedule');
 Route::post('/single-sends/update/single-send/Schedule/cancel',[SingleSendController::class, 'cancelSchedule'])->name('single-sends.cancelSchedule');
-Route::resource('/suppression-group',suppressionGroupController::class);
+Route::post('/suppression-group/update-group/{groupId}', [unsubscribeGroupsController::class, 'updateGroup'])->name('updateGroup');
+Route::resource('/suppression-group/bounce',bounceController::class);
+Route::get('/suppression-group/bounce/list/update', [bounceController::class, 'updateList'])->name('updateList');
+Route::resource('/unsubscribe-group',unsubscribeGroupsController::class);
 Route::resource('/sender-verification',senderVerificationController::class);
 ///Route::get('/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend');

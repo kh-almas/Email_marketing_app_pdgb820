@@ -22,8 +22,8 @@ class emailController extends Controller
 
     public function destroy(Email $email)
     {
-        $response = $this->contact->deleteContact($email->sendgrid_id);
-//        return $response;
+        $this->contact->deleteContact($email->sendgrid_id);
+        $email->lists()->detach();
         $email->delete();
         return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
     }

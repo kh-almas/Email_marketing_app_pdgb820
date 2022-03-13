@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSuppressionGroupsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateSuppressionGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('suppression_groups', function (Blueprint $table) {
+        Schema::create('bounces', function (Blueprint $table) {
             $table->id();
-            $table->string('sendgrid_id');
-            $table->string('name');
-            $table->text('description');
-            $table->boolean('is_default');
+            $table->string('created');
+            $table->string('email');
+            $table->text('reason');
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateSuppressionGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suppression_groups');
+        Schema::dropIfExists('bounces');
     }
-}
+};

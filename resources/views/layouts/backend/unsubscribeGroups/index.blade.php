@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Suppression Group') }}
+            {{ __('Unsubscribe Group') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     @include('sessionMessage')
 
-                    <a href="{{ route('dashboard.suppression-group.create') }}" type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Create</a>
+                    <a href="{{ route('dashboard.unsubscribe-group.create') }}" type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Create</a>
 
 
                     <div class="flex flex-col">
@@ -22,7 +22,7 @@
                                         <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
                                             <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                                Suppression Group
+                                                Unsubscribe Group
                                             </th>
                                             <th scope="col" class="py-3 px-6 text-right text-xs font-medium tracking-wider text-gray-700 uppercase dark:text-gray-400">
                                                 Action
@@ -34,7 +34,7 @@
                                         @forelse($suppressionGroup as $suppression)
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                 <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <a href="{{ route('dashboard.suppression-group.show',$suppression->id) }}">{{ $suppression->name }}</a>
+                                                    <a href="{{ route('dashboard.unsubscribe-group.show',$suppression->id) }}">{{ $suppression->name }}</a>
                                                 </td>
                                                 <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
                                                     <button id="dropdownLeftButton{{ $suppression->id }}" data-dropdown-toggle="dropdownLeft{{ $suppression->id }}" data-dropdown-placement="left" class="bg-blue-700 mb-3 md:mb-0 text-white hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button"><svg class="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Actions</button>
@@ -43,10 +43,10 @@
                                                     <div id="dropdownLeft{{ $suppression->id }}" class="hidden z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
                                                         <ul class="py-1" aria-labelledby="dropdownLeftButton{{ $suppression->id }}">
                                                             <li>
-                                                                <a href="{{ route('dashboard.suppression-group.show',$suppression->id) }}" class="flex justify-center py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">View</a>
+                                                                <a href="{{ route('dashboard.unsubscribe-group.show',$suppression->id) }}" class="flex justify-center py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">View</a>
                                                             </li>
                                                             <li>
-                                                                <form action="{{ route('dashboard.suppression-group.destroy',$suppression->id) }}" method="POST">
+                                                                <form action="{{ route('dashboard.unsubscribe-group.destroy',$suppression->id) }}" method="POST">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" onclick="return confirm('Wanna delete suppression group')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
@@ -57,7 +57,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td class="py-4 px-6">There is no suppression group in this lists.</td>
+                                                <td class="py-4 px-6">There is no unsubscribe group in this lists.</td>
                                             </tr>
                                         @endforelse
 

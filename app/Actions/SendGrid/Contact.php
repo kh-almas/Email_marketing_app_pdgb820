@@ -30,22 +30,22 @@ class Contact
 
     public function addContact($info)
     {
-//        $url = $this->baseURL.'/v3/marketing/contacts';
+        $url = $this->baseURL.'/v3/marketing/contacts';
 
-//        $data = [
-//            'list_ids' => [
-//                $info->list_ids,
-//            ],
-//            'contacts' => [
-//                [
-//                    'email' => $info->email,
-//                ]
-//            ],
-//        ];
-//
-//        $response = Http::withHeaders([
-//            'Authorization' => "Bearer {$this->apiKey}",
-//        ])->put($url, $data);
+        $data = [
+            'list_ids' => [
+                $info->list_ids,
+            ],
+            'contacts' => [
+                [
+                    'email' => $info->email,
+                ]
+            ],
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->put($url, $data);
 
         //dd($response->body());
 

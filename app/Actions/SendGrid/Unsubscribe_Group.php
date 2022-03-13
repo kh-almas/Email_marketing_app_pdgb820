@@ -2,11 +2,11 @@
 
 namespace App\Actions\SendGrid;
 
+use App\Models\UnsubscribeGroup;
 use Illuminate\Support\Facades\Http;
-use App\Models\SuppressionGroup as SuppressionGroupmodel;
 
 
-class SuppressionGroup
+class Unsubscribe_Group
 {
     private $apiKey;
     private $baseURL;
@@ -17,7 +17,7 @@ class SuppressionGroup
         $this->baseURL = 'https://api.sendgrid.com';
     }
 
-    public function createSuppressionGroup($info)
+    public function createUnsubscribeGroup($info)
     {
         $url = $this->baseURL.'/v3/asm/groups';
         $response = Http::withHeaders([
@@ -27,7 +27,9 @@ class SuppressionGroup
             'description' => $info->description,
         ]);
 
-        SuppressionGroupmodel::create([
+        //dd($response->body());
+
+        UnsubscribeGroup::create([
             'sendgrid_id' => $response['id'],
             'name' => $response['name'],
             'description' => $response['description'],
@@ -35,11 +37,21 @@ class SuppressionGroup
         ]);
     }
 
-    public function deleteSuppressionGroup($group_id)
+    public function deleteUnsubscribeGroup($group_id)
     {
         $url = $this->baseURL.'/v3/asm/groups/'.$group_id;
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
+    }
+
+    public function retrieveAllSuppression($group_id)
+    {
+        $url = $this->baseURL.'/v3/asm/groups/'.$group_id.'/suppressions';
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->get($url);
+
+        dd($response->body());
     }
 }
