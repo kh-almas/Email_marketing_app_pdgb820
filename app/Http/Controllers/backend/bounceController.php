@@ -19,7 +19,7 @@ class bounceController extends Controller
     public function updateList()
     {
         $dfhfxhg = $this->bounces->updateList();
-        return $dfhfxhg;
+//        return $dfhfxhg;
         return redirect()->route('dashboard.bounce.index')->with('success','List updated');
     }
 
@@ -93,11 +93,13 @@ class bounceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Bounce  $bounce
+     * @return \Illuminate\Http\Response|void
      */
-    public function destroy($id)
+    public function destroy(Bounce $bounce)
     {
-        //
+        $this->bounces->deletebounce($bounce);
+        $bounce->delete();
+        return redirect()->route('dashboard.bounce.index')->With('danger', 'Email Deleted');
     }
 }

@@ -11,16 +11,16 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="py-6">
                         <div class="py-4">
-                            <p><span class="font-semibold">Sendgrid Id:</span> {{ $bounce->created }}</p>
+                            <p><span class="font-semibold">Time:</span> {{ $bounce->created }}</p>
                         </div>
                         <div class="py-4">
-                            <p><span class="font-semibold">Name:</span> {{ $bounce->email }}</p>
+                            <p><span class="font-semibold mr-6">Status:</span> {{ $bounce->status }}</p>
                         </div>
                         <div class="py-4">
-                            <p><span class="font-semibold mr-6">Description:</span> {{ $bounce->status }}</p>
+                            <p><span class="font-semibold">Email:</span> {{ $bounce->email }}</p>
                         </div>
                         <div class="py-4">
-                            <p><span class="font-semibold mr-6">Description:</span> {{ $bounce->reason }}</p>
+                            <p><span class="font-semibold mr-6">Reason:</span> {{ $bounce->reason }}</p>
                         </div>
                     </div>
                 </div>

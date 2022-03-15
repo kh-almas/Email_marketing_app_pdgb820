@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Actions\SendGrid\Unsubscribe_Group;
 use App\Http\Controllers\Controller;
 use App\Models\UnsubscribeGroup;
+use App\Models\UnsubscribeGroupsEmail;
 use Illuminate\Http\Request;
 
 class unsubscribeGroupsController extends Controller
@@ -94,9 +95,36 @@ class unsubscribeGroupsController extends Controller
         return redirect()->route('dashboard.unsubscribe-group.index')->With('danger', 'suppression Group Deleted');
     }
 
-    public function updateGroup($groupId)
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\UnsubscribeGroup  $groupId
+     * @return \Illuminate\Http\Response
+     */
+    public function updateGroup(UnsubscribeGroup $groupId)
     {
-        $fxbxcf = $this->UnsubscribeGroup->retrieveAllSuppression($groupId);
+        $this->UnsubscribeGroup->retrieveAllSuppression($groupId);
+        return back()->with('info','List Updated');
+    }
+
+    public function addEmailToSuppression()
+    {
+        $groupId = 17030;
+        $fxbxcf = $this->UnsubscribeGroup->addEmailToSuppression($groupId);
         return $fxbxcf;
+    }
+
+    public function deleteEmailFromUnsubscribeGroup(UnsubscribeGroupsEmail $emailInfo, $group_id)
+    {
+        $response = $this->UnsubscribeGroup->deleteEmailFromUnsubscribeGroup($emailInfo, $group_id);
+        if ($response === true)
+        {
+            $emailInfo->delete();
+            return back()->With('danger', 'Email delete form this list');
+        }else{
+            return back()->With('danger', 'Something wrong with sendgrid configuration');
+        }
+
     }
 }

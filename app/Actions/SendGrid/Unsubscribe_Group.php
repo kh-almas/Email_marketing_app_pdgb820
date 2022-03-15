@@ -47,10 +47,41 @@ class Unsubscribe_Group
 
     public function retrieveAllSuppression($group_id)
     {
-        $url = $this->baseURL.'/v3/asm/groups/'.$group_id.'/suppressions';
+        $url = $this->baseURL.'/v3/asm/groups/'.$group_id->sendgrid_id.'/suppressions';
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
-        ])->get($url);
+        ])->get($url)->collect();
+
+        foreach ($response as $data)
+        {
+            $group_id->email()->firstOrCreate([
+                'email' => $data,
+            ]);
+        }
+    }
+
+    public function deleteEmailFromUnsubscribeGroup($emailInfo, $group_id)
+    {
+        $url = $this->baseURL.'/v3/asm/groups/'.$group_id.'/suppressions/'.$emailInfo->email;
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->delete($url);
+
+//        dd($response->successful());
+        return $response->successful();
+    }
+
+    public function addEmailToSuppression($group_id)
+    {
+        $url = $this->baseURL.'/v3/asm/groups/17030/suppressions';
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->post($url, [
+            'recipient_emails' => [
+                'almas@gmail.com',
+                'prtg@gmail.com',
+            ],
+        ]);
 
         dd($response->body());
     }

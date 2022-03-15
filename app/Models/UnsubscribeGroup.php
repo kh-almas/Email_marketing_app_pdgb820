@@ -15,4 +15,9 @@ class UnsubscribeGroup extends Model
         'sendgrid_id',
         'is_default',
     ];
+
+    public function email()
+    {
+        return $this->hasMany(UnsubscribeGroupsEmail::class, 'unsubscribe_group_id');
+    }
 }

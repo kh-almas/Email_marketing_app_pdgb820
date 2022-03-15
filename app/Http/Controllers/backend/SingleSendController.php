@@ -8,6 +8,7 @@ use App\Models\Clist;
 use App\Models\SenderVerification;
 use App\Models\SingleSend;
 use App\Models\SuppressionGroup;
+use App\Models\UnsubscribeGroup;
 use Illuminate\Http\Request;
 
 class SingleSendController extends Controller
@@ -41,7 +42,7 @@ class SingleSendController extends Controller
     public function create()
     {
         $contactList = Clist::latest()->get();
-        $suppression_group_id = SuppressionGroup::latest()->get();
+        $suppression_group_id = UnsubscribeGroup::latest()->get();
         $sender = SenderVerification::latest()->get();
         return view('layouts.backend.singleSend.create',compact('contactList','suppression_group_id','sender'));
     }
