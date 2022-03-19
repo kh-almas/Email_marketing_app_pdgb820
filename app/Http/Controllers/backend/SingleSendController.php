@@ -28,8 +28,6 @@ class SingleSendController extends Controller
      */
     public function index()
     {
-//        $response = $this->singleSend->getSender();
-//        return $response;
         $singleSends = SingleSend::latest()->paginate('15');
         return view('layouts.backend.singleSend.index',compact('singleSends'));
     }
@@ -81,9 +79,8 @@ class SingleSendController extends Controller
      */
     public function show(SingleSend $single_send)
     {
-        //$list = DB::Table('single_sends')->where('sendgrid_id', $single_send->list_ids)->select('name')->get();
         $list = Clist::where('sendgrid_id', $single_send->list_ids)->firstOrFail();
-        $suppression = SuppressionGroup::where('sendgrid_id', $single_send->suppression_group_id)->firstOrFail();
+        $suppression = UnsubscribeGroup::where('sendgrid_id', $single_send->suppression_group_id)->firstOrFail();
         $sender = SenderVerification::where('sendgrid_id', $single_send->sender_id)->firstOrFail();
         return view('layouts.backend.singleSend.view',compact('single_send','list','suppression','sender'));
     }
@@ -111,7 +108,7 @@ class SingleSendController extends Controller
 //        return view('layouts.backend.singleSend.edit',compact('single_send'));
 
         $contactList = Clist::latest()->get();
-        $suppression_group_id = SuppressionGroup::latest()->get();
+        $suppression_group_id = UnsubscribeGroup::latest()->get();
         $sender = SenderVerification::latest()->get();
         return view('layouts.backend.singleSend.edit',compact('single_send','contactList','suppression_group_id','sender'));
 

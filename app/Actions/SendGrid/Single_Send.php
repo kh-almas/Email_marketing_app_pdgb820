@@ -67,14 +67,7 @@ class Single_Send
             'ip_pool' => $response['email_config']['ip_pool'],
             'editor' => $response['email_config']['editor'],
         ]);
-
-//        echo '<pre>';
-//        print_r($response->body());
-//        echo '</pre>';
-///$response['id'],name,status
-        ///$response['send_to']['list_ids'][0],,all
-        /// $response['email_config']['subject'],html_content,plain_content,generate_plain_content,,editor,,suppression_group_id,custom_unsubscribe_url,sender_id,ip_pool
-    }
+}
 
 
     public function scheduleSingleSends($singleSendID)
@@ -83,7 +76,7 @@ class Single_Send
 
         $dateTime = now()->addSeconds('300');
 
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, [
             'send_at' => $dateTime,
@@ -102,7 +95,7 @@ class Single_Send
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID.'/schedule';
 
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
 
@@ -153,8 +146,6 @@ class Single_Send
             ]
         ]);
 
-        //dd($response->body());
-
         $singleSendID->update([
             'sendgrid_id' => $response['id'],
             'name' => $response['name'],
@@ -179,7 +170,7 @@ class Single_Send
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID;
 
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
     }

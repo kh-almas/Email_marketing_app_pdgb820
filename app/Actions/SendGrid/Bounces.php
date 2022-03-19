@@ -3,7 +3,6 @@
 namespace App\Actions\SendGrid;
 
 use App\Models\Bounce;
-use App\Models\Email;
 use Illuminate\Support\Facades\Http;
 
 class Bounces
@@ -43,8 +42,6 @@ class Bounces
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url. '?email_address='. $bounce->email);
-
-        //dd($response->successful());
 
         if ($response->successful() == 0)
         {

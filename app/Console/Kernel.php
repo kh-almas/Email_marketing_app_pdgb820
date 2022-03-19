@@ -15,7 +15,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->command('inspire')->hourly();everyMinute
+         $schedule->command('sendgrid:stats')->daily();
+         $schedule->command('sendgrid:daily_stats')->everyMinute();
+         $schedule->command('sendgrid:dashboard_stats')->everyMinute();
     }
 
     /**

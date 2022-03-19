@@ -15,7 +15,6 @@ class Sender_Verification
         $this->baseURL = 'https://api.sendgrid.com';
     }
 
-
     public function createSenderVerification($info)
     {
         $url = $this->baseURL.'/v3/verified_senders';
@@ -56,7 +55,7 @@ class Sender_Verification
     public function deleteSenderVerification($sendgrid_id)
     {
         $url = $this->baseURL.'/v3/verified_senders/'.$sendgrid_id;
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
     }

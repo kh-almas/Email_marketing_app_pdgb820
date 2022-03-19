@@ -3,8 +3,10 @@
 use App\Http\Controllers\backend\bounceController;
 use App\Http\Controllers\backend\emailController;
 use App\Http\Controllers\backend\emailListController;
+use App\Http\Controllers\backend\globalStatisticsController;
 use App\Http\Controllers\backend\senderVerificationController;
 use App\Http\Controllers\backend\SingleSendController;
+use App\Http\Controllers\backend\spamController;
 use App\Http\Controllers\backend\unsubscribeGroupsController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +36,7 @@ Route::post('/suppression-group/update-group/{groupId}', [unsubscribeGroupsContr
 Route::get('/suppression-group/addEmailToSuppression', [unsubscribeGroupsController::class, 'addEmailToSuppression'])->name('addEmailToSuppression');
 Route::delete('/unsubscribe-group/destroy/{emailInfo}/{group_id}', [unsubscribeGroupsController::class, 'deleteEmailFromUnsubscribeGroup'])->name('deleteEmailFromUnsubscribeGroup');
 Route::resource('/sender-verification',senderVerificationController::class);
+Route::resource('/spam', spamController::class);
+Route::get('/spam/list/update',[spamController::class, 'updateSpamList'])->name('spam.updatelist');
+Route::resource('/stats',globalStatisticsController::class);
 ///Route::get('/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend');

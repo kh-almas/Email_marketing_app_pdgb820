@@ -95,7 +95,6 @@ class unsubscribeGroupsController extends Controller
         return redirect()->route('dashboard.unsubscribe-group.index')->With('danger', 'suppression Group Deleted');
     }
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -125,6 +124,5 @@ class unsubscribeGroupsController extends Controller
         }else{
             return back()->With('danger', 'Something wrong with sendgrid configuration');
         }
-
     }
 }

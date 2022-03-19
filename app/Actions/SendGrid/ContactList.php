@@ -10,7 +10,6 @@ class ContactList
     private $apiKey;
     private $baseURL;
 
-
     public function __construct()
     {
         $this->apiKey = config('services.sendgrid.apiKey');
@@ -27,8 +26,6 @@ class ContactList
             'name' => $list,
         ]);
 
-        //return $response;
-
         Clist::create([
             'name' => $response['name'],
             'sendgrid_id' => $response['id'],
@@ -39,8 +36,6 @@ class ContactList
     public function updateContactList($list, $email_list)
     {
         $url = $this->baseURL.'/v3/marketing/lists/'.$email_list->sendgrid_id;
-
-        //return $url;
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",

@@ -60,6 +60,7 @@
                                                                 </form>
                                                             </li>
                                                         </ul>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @empty

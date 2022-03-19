@@ -4,11 +4,9 @@ namespace App\Http\Controllers\backend;
 
 use App\Actions\SendGrid\Contact;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\addEmailRequest;
 use App\Http\Requests\updateEmailRequest;
 use App\Models\Clist;
 use App\Models\Email;
-use App\Models\EmailList;
 use Illuminate\Http\Request;
 
 class emailController extends Controller
@@ -18,14 +16,6 @@ class emailController extends Controller
     public function __construct(Contact $contact)
     {
         $this->contact = $contact;
-    }
-
-    public function destroy(Email $email)
-    {
-        $this->contact->deleteContact($email->sendgrid_id);
-        $email->lists()->detach();
-        $email->delete();
-        return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
     }
 
     /**
@@ -70,9 +60,6 @@ class emailController extends Controller
      */
     public function show(Email $email)
     {
-
-        //$dfgsf = Email::where('id', $email)->get();
-        //return $email;
         return view('layouts.backend.email.view',compact('email'));
     }
 
@@ -125,14 +112,13 @@ class emailController extends Controller
      * @param  \App\Models\Email  $email
      * @return \Illuminate\Http\RedirectResponse
      */
-//    public function destroy(Email $email)
-//    {
-//        //return $email->sendgrid_id;
-//        $response = $this->contact->deleteContact($email->sendgrid_id);
-//        return $response;
-//        $email->delete();
-//        return redirect()->route('dashboard.email.index')->With('danger', 'Email Delated');
-//    }
+    public function destroy(Email $email)
+    {
+        $this->contact->deleteContact($email->sendgrid_id);
+        $email->lists()->detach();
+        $email->delete();
+        return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
+    }
 
     public function getSendgridId(Email $id)
     {

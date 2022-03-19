@@ -58,7 +58,7 @@ class emailListController extends Controller
      */
     public function show(Clist $email_list)
     {
-        $response = $this->list->updateContactCount($email_list);
+        $this->list->updateContactCount($email_list);
         return view('layouts.backend.email_list.view',compact('email_list'));
     }
 
@@ -82,7 +82,7 @@ class emailListController extends Controller
      */
     public function update(Request $request, Clist $email_list)
     {
-        $response = $this->list->updateContactList($request->name, $email_list);
+        $this->list->updateContactList($request->name, $email_list);
         return redirect()->route('dashboard.email_list.index')->with('info','Email list updated');
     }
 
@@ -94,7 +94,7 @@ class emailListController extends Controller
      */
     public function destroy(Clist $email_list)
     {
-        $response = $this->list->deleteContactList($email_list);
+        $this->list->deleteContactList($email_list);
         return redirect()->route('dashboard.email_list.index')->With('danger', 'Email list deleted');
     }
 }

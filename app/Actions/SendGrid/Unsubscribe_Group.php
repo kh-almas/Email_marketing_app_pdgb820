@@ -27,8 +27,6 @@ class Unsubscribe_Group
             'description' => $info->description,
         ]);
 
-        //dd($response->body());
-
         UnsubscribeGroup::create([
             'sendgrid_id' => $response['id'],
             'name' => $response['name'],
@@ -40,7 +38,7 @@ class Unsubscribe_Group
     public function deleteUnsubscribeGroup($group_id)
     {
         $url = $this->baseURL.'/v3/asm/groups/'.$group_id;
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
     }
@@ -67,7 +65,6 @@ class Unsubscribe_Group
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
 
-//        dd($response->successful());
         return $response->successful();
     }
 

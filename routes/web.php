@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\backend\bounceController;
+use App\Http\Controllers\backend\homeController;
 use App\Http\Controllers\backend\senderVerificationController;
 use App\Http\Controllers\backend\smtpController;
-use App\Http\Controllers\backend\unsubscribeGroupsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,16 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//    return view('dashboard');
+//})->name('dashboard');
 
-
-Route::get('/smtp',[smtpController::class, 'index']);
-Route::get('/aaaaaaaaaaa',[smtpController::class, 'aaaaaa'])->name('get');
-
-
-
-
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [homeController::class , 'dashboard'])->name('dashboard');
 Route::get('/dashboard/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend')->middleware('auth');
 

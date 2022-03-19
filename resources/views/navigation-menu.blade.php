@@ -113,7 +113,7 @@
 
                             <div class="border-t border-gray-100"></div>
 
-                            <x-jet-dropdown-link href="{{ route('dashboard.bounce.index') }}">
+                            <x-jet-dropdown-link href="{{ route('dashboard.spam.index') }}">
                                 {{ __('Spam Reports') }}
                             </x-jet-dropdown-link>
 

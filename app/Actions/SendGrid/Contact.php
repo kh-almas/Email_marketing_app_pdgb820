@@ -20,13 +20,7 @@ class Contact
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url . '?ids=' . $email);
-//        dd($response->body());
     }
-
-
-
-
-
 
     public function addContact($info)
     {
@@ -43,12 +37,9 @@ class Contact
             ],
         ];
 
-        $response = Http::withHeaders([
+        Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, $data);
-
-        //dd($response->body());
-
 
         $email = Email::create([
             'first_name' => $info->first_name,
@@ -80,10 +71,6 @@ class Contact
         ])->post($url, [
             "query"=> "email LIKE '{$contact->email}%'",
         ]);
-
-//        echo '<pre>';
-//        print_r($response['result']);
-//        echo '</pre>';
 
         $contact->update([
             'sendgrid_id' => $response['result'][0]['id'],

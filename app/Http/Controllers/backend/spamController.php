@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Actions\SendGrid\Spam_Reporte;
 use App\Http\Controllers\Controller;
-use App\Models\Bounce;
-use App\Actions\SendGrid\Bounces;
+use App\Models\Spam;
 use Illuminate\Http\Request;
 
-class bounceController extends Controller
+class spamController extends Controller
 {
-    private $bounces;
 
-    public function __construct(Bounces $bounces)
-    {
-        $this->bounces = $bounces;
-    }
+    private $spamReporte;
 
-    public function updateList()
+    public function __construct(Spam_Reporte $spamReporte)
     {
-        $this->bounces->updateList();
-        return redirect()->route('dashboard.bounce.index')->with('success','List updated');
+        $this->spamReporte = $spamReporte;
     }
 
     /**
@@ -29,8 +24,15 @@ class bounceController extends Controller
      */
     public function index()
     {
-        $bounces = Bounce::latest()->paginate('15');
-        return view('layouts.backend.bounce.index',compact('bounces'));
+        $spams = Spam::latest()->paginate('15');
+        return view('layouts.backend.spam.index',compact('spams'));
+    }
+
+
+    public function updateSpamList()
+    {
+        $response = $this->spamReporte->updateSpamList();
+        return $response;
     }
 
     /**
@@ -57,12 +59,12 @@ class bounceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Bounce  $bounce
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function show(Bounce $bounce)
+    public function show($id)
     {
-        return view('layouts.backend.bounce.view',compact('bounce'));
+        //
     }
 
     /**
@@ -91,13 +93,12 @@ class bounceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Bounce  $bounce
-     * @return \Illuminate\Http\Response|void
+     * @param  \App\Models\Spam  $spam
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Bounce $bounce)
+    public function destroy(Spam $spam)
     {
-        $this->bounces->deletebounce($bounce);
-        $bounce->delete();
-        return redirect()->route('dashboard.bounce.index')->With('danger', 'Email Deleted');
+        $response = $this->spamReporte->deleteSpam($spam->email);
+        return $response;
     }
 }
