@@ -2,8 +2,8 @@
 
 namespace App\Actions\SendGrid;
 
+use App\Models\Clist;
 use App\Models\SingleSend;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class Single_Send
@@ -24,7 +24,7 @@ class Single_Send
             'Authorization' => "Bearer {$this->apiKey}",
         ])->get($url);
 
-        dd($response->body());
+        return $response->successful();
     }
 
     public function addSingleSend($info)
@@ -36,9 +36,7 @@ class Single_Send
         ])->post($url, [
             'name' => $info->name,
             'send_to' => [
-                'list_ids' => [
-                    $info->list_ids,
-                ],
+                'list_ids' => $info->lists,
             ],
             'email_config' => [
                 'subject' => $info->subject,
@@ -49,25 +47,39 @@ class Single_Send
             ]
         ]);
 
-        SingleSend::create([
-            'sendgrid_id' => $response['id'],
-            'name' => $response['name'],
-            'status' => $response['status'],
-            //'categories' => $response[''],
-            'list_ids' => $response['send_to']['list_ids'][0],
-            //'segment_ids' => $response[''],
-            'send_all' => $response['send_to']['all'],
-            'subject' => $response['email_config']['subject'],
-            'suppression_group_id' => $response['email_config']['suppression_group_id'],
-            'sender_id' => $response['email_config']['sender_id'],
-            'html_content' => $response['email_config']['html_content'],
-            'plain_content' => $response['email_config']['plain_content'],
-            'generate_plain_content' => $response['email_config']['generate_plain_content'],
-            'custom_unsubscribe_url' => $response['email_config']['custom_unsubscribe_url'],
-            'ip_pool' => $response['email_config']['ip_pool'],
-            'editor' => $response['email_config']['editor'],
-        ]);
-}
+        $success = $response->successful();
+
+        if ($success == 1)
+        {
+            $Id = [];
+            $contactLists = Clist::whereIn('sendgrid_id',$response['send_to']['list_ids'])->get();
+            foreach($contactLists as $contactList)
+            {
+                $Id[] = $contactList->id;
+            }
+
+            $forList =  SingleSend::create([
+                'sendgrid_id' => $response['id'],
+                'name' => $response['name'],
+                'status' => $response['status'],
+                'send_all' => $response['send_to']['all'],
+                'subject' => $response['email_config']['subject'],
+                'suppression_group_id' => $response['email_config']['suppression_group_id'],
+                'sender_id' => $response['email_config']['sender_id'],
+                'html_content' => $response['email_config']['html_content'],
+                'plain_content' => $response['email_config']['plain_content'],
+                'generate_plain_content' => $response['email_config']['generate_plain_content'],
+                'custom_unsubscribe_url' => $response['email_config']['custom_unsubscribe_url'],
+                'ip_pool' => $response['email_config']['ip_pool'],
+                'editor' => $response['email_config']['editor'],
+            ]);
+//            return $response['send_to']['list_ids'];
+
+            $forList->lists()->syncWithoutDetaching($Id);
+        }
+
+        return $success;
+    }
 
 
     public function scheduleSingleSends($singleSendID)
@@ -76,18 +88,24 @@ class Single_Send
 
         $dateTime = now()->addSeconds('300');
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, [
             'send_at' => $dateTime,
         ]);
 
-        $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
+        $success = $response->successful();
 
-        $forUpdate->update([
-            'is_send' => 1,
-            'send_at' => $dateTime->toDateTimeString(),
-        ]);
+        if ($success == 1)
+        {
+            $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
+
+            $forUpdate->update([
+                'is_send' => 1,
+                'send_at' => $dateTime->toDateTimeString(),
+            ]);
+        }
+        return $success;
     }
 
 
@@ -95,20 +113,26 @@ class Single_Send
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID.'/schedule';
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
 
-        $dateTime = now()->addSeconds('300');
+        $success = $response->successful();
 
-        $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
-
-        if($forUpdate->send_at < $dateTime)
+        if ($success == 1)
         {
-            $forUpdate->update([
-                'is_send' => 0,
-            ]);
+            $dateTime = now()->addSeconds('300');
+
+            $forUpdate = SingleSend::where('sendgrid_id', $singleSendID)->firstOrFail();
+
+            if($forUpdate->send_at < $dateTime)
+            {
+                $forUpdate->update([
+                    'is_send' => 0,
+                ]);
+            }
         }
+        return $success;
     }
 
     public function duplicateSingleSend($singleSendID)
@@ -121,21 +145,49 @@ class Single_Send
             'name' => '',
         ]);
 
-        dd($response->body());
+        $success = $response->successful();
+
+        if ($success == 1)
+        {
+            $Id = [];
+            $contactLists = Clist::whereIn('sendgrid_id',$response['send_to']['list_ids'])->get();
+            foreach($contactLists as $contactList)
+            {
+                $Id[] = $contactList->id;
+            }
+
+            $forList =  SingleSend::create([
+                'sendgrid_id' => $response['id'],
+                'name' => $response['name'],
+                'status' => $response['status'],
+                'send_all' => $response['send_to']['all'],
+                'subject' => $response['email_config']['subject'],
+                'suppression_group_id' => $response['email_config']['suppression_group_id'],
+                'sender_id' => $response['email_config']['sender_id'],
+                'html_content' => $response['email_config']['html_content'],
+                'plain_content' => $response['email_config']['plain_content'],
+                'generate_plain_content' => $response['email_config']['generate_plain_content'],
+                'custom_unsubscribe_url' => $response['email_config']['custom_unsubscribe_url'],
+                'ip_pool' => $response['email_config']['ip_pool'],
+                'editor' => $response['email_config']['editor'],
+            ]);
+
+            $forList->lists()->sync($Id);
+        }
+
+        //need save duplicateSingleSend in database
     }
 
-    public function updateSingleSend($info, $singleSendID)
+    public function updateSingleSend($info, $singleSend)
     {
-        $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID->sendgrid_id;
+        $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSend->sendgrid_id;
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->patch($url, [
             'name' => $info->name,
             'send_to' => [
-                'list_ids' => [
-                    $info->list_ids,
-                ],
+                'list_ids' => $info->lists,
             ],
             'email_config' => [
                 'subject' => $info->subject,
@@ -146,33 +198,47 @@ class Single_Send
             ]
         ]);
 
-        $singleSendID->update([
-            'sendgrid_id' => $response['id'],
-            'name' => $response['name'],
-            'status' => $response['status'],
-            //'categories' => $response[''],
-            'list_ids' => $response['send_to']['list_ids'][0],
-            //'segment_ids' => $response[''],
-            'send_all' => $response['send_to']['all'],
-            'subject' => $response['email_config']['subject'],
-            'suppression_group_id' => $response['email_config']['suppression_group_id'],
-            'sender_id' => $response['email_config']['sender_id'],
-            'html_content' => $response['email_config']['html_content'],
-            'plain_content' => $response['email_config']['plain_content'],
-            'generate_plain_content' => $response['email_config']['generate_plain_content'],
-            'custom_unsubscribe_url' => $response['email_config']['custom_unsubscribe_url'],
-            'ip_pool' => $response['email_config']['ip_pool'],
-            'editor' => $response['email_config']['editor'],
-        ]);
+        $success = $response->successful();
+
+        if ($success == 1)
+        {
+            $Id = [];
+            $contactLists = Clist::whereIn('sendgrid_id',$response['send_to']['list_ids'])->get();
+            foreach($contactLists as $contactList)
+            {
+                $Id[] = $contactList->id;
+            }
+            $singleSend->update([
+                'sendgrid_id' => $response['id'],
+                'name' => $response['name'],
+                'status' => $response['status'],
+                'send_all' => $response['send_to']['all'],
+                'subject' => $response['email_config']['subject'],
+                'suppression_group_id' => $response['email_config']['suppression_group_id'],
+                'sender_id' => $response['email_config']['sender_id'],
+                'html_content' => $response['email_config']['html_content'],
+                'plain_content' => $response['email_config']['plain_content'],
+                'generate_plain_content' => $response['email_config']['generate_plain_content'],
+                'custom_unsubscribe_url' => $response['email_config']['custom_unsubscribe_url'],
+                'ip_pool' => $response['email_config']['ip_pool'],
+                'editor' => $response['email_config']['editor'],
+            ]);
+
+            $singleSend->lists()->sync($Id);
+        }
+
+        return $success;
     }
 
     public function deleteSingleSend($singleSendID)
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID;
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
+
+        return $response->successful();
     }
 
 

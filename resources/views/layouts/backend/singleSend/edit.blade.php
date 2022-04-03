@@ -12,19 +12,41 @@
                     <form action="{{ route('dashboard.single-sends.update', $single_send->id) }}" method="POST">
                         @csrf
                         @method('put')
+
+
                         <div class="mb-6">
-                            <label for="list_ids" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select Lists</label>
-                            <select id="list_ids" name="list_ids" class="@error('list_ids') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <label for="lists" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select Lists</label>
+                            <select
+                                id="select-role"
+                                name="lists[]"
+                                placeholder="Select List..."
+                                autocomplete="off"
+                                class="block w-full rounded-sm cursor-pointer focus:outline-none"
+                                multiple>
                                 @forelse($contactList as $list)
-                                    <option value="{{ $list->sendgrid_id }}" {{ $list->sendgrid_id === $single_send->list_ids ? 'selected' : '' }}>{{ $list->name }}</option>
+                                    <option value="{{ $list->sendgrid_id }}" @foreach($single_send->lists as $s_s_list) @if($s_s_list->id === $list->id ) selected @endif @endforeach >{{ $list->name }}</option>
                                 @empty
                                     <option>There don't have any list</option>
                                 @endforelse
+                                @error('lists')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </select>
-                            @error('list_ids')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
                         </div>
+
+{{--                        <div class="mb-6">--}}
+{{--                            <label for="list_ids" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select Lists</label>--}}
+{{--                            <select id="list_ids" name="list_ids" class="@error('list_ids') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">--}}
+{{--                                @forelse($contactList as $list)--}}
+{{--                                    <option value="{{ $list->sendgrid_id }}" {{ $list->sendgrid_id === $single_send->list_ids ? 'selected' : '' }}>{{ $list->name }}</option>--}}
+{{--                                @empty--}}
+{{--                                    <option>There don't have any list</option>--}}
+{{--                                @endforelse--}}
+{{--                            </select>--}}
+{{--                            @error('list_ids')--}}
+{{--                            <div class="alert alert-danger">{{ $message }}</div>--}}
+{{--                            @enderror--}}
+{{--                        </div>--}}
 
                         <div class="mb-6">
                             <label for="suppression_group_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Suppression Group Id</label>

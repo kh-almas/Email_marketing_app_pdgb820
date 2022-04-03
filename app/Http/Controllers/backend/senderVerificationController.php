@@ -31,7 +31,7 @@ class senderVerificationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -46,15 +46,21 @@ class senderVerificationController extends Controller
      */
     public function store(addSenderVerificationRequest $request)
     {
-        $this->sender->createSenderVerification($request);
-        return redirect()->route('dashboard.sender-verification.index')->with('success','Sender verification added');
+        $response =$this->sender->createSenderVerification($request);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.sender-verification.index')->with('success','Sender verification added');
+        }else{
+            return redirect()->route('dashboard.sender-verification.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\SenderVerification $sender_verification
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(SenderVerification $sender_verification)
     {
@@ -88,19 +94,29 @@ class senderVerificationController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\SenderVerification $sender_verification
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(SenderVerification $sender_verification)
     {
         $this->sender->deleteSenderVerification($sender_verification->sendgrid_id);
-        $sender_verification->delete();
-        return redirect()->route('dashboard.sender-verification.index')->with('danger','Sender verification deleted');
 
+        if ($response == 1)
+        {
+            $sender_verification->delete();
+            return redirect()->route('dashboard.sender-verification.index')->with('danger','Sender verification deleted');
+        }else{
+            return redirect()->route('dashboard.sender-verification.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     public function getAllSingleSend()
     {
-        $this->sender->getAllSingleSend();
-        return redirect()->route('dashboard.sender-verification.index')->with('success','Sender updated');
+        $response = $this->sender->getAllSingleSend();
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.sender-verification.index')->with('success','Sender list updated');
+        }else{
+            return redirect()->route('dashboard.bounce.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 }

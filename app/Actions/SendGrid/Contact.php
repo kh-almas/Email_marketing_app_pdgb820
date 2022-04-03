@@ -2,6 +2,7 @@
 
 namespace App\Actions\SendGrid;
 
+use App\Models\Clist;
 use App\Models\Email;
 use Illuminate\Support\Facades\Http;
 
@@ -14,22 +15,19 @@ class Contact
         $this->apiKey = config('services.sendgrid.apiKey');
         $this->baseURL = 'https://api.sendgrid.com';
     }
-    public function deleteContact($email)
-    {
-        $url = $this->baseURL.'/v3/marketing/contacts';
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-        ])->delete($url . '?ids=' . $email);
-    }
 
     public function addContact($info)
     {
+        $sendgrid_list = [];
+        $dfd = Clist::whereIn('id', $info->clist)->get();
+        foreach ($dfd as $dfdd){
+            $sendgrid_list[] = $dfdd->sendgrid_id;
+        }
+
         $url = $this->baseURL.'/v3/marketing/contacts';
 
         $data = [
-            'list_ids' => [
-                $info->list_ids,
-            ],
+            'list_ids' => $sendgrid_list,
             'contacts' => [
                 [
                     'email' => $info->email,
@@ -37,30 +35,39 @@ class Contact
             ],
         ];
 
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, $data);
 
-        $email = Email::create([
-            'first_name' => $info->first_name,
-            'last_name' => $info->last_name,
-            'email' => $info->email,
-            'address_line_one' => $info->address_line_one,
-            'address_line_two' => $info->address_line_two,
-            'city' => $info->city,
-            'state' => $info->state,
-            'postal_code' => $info->postal_code,
-            'country' => $info->country,
-            'phone_number' => $info->phone_number,
-            'whatsapp' => $info->whatsapp,
-            'facebook' => $info->facebook,
-            'line' => $info->line,
-            'alternate_emails' => $info->alternate_emails,
-            'list_ids' => $info->list_ids,
-            'unique_name' => $info->unique_name,
-        ]);
+        $success = $response->successful();
 
-        $email->lists()->syncWithoutDetaching($info->clist);
+        if ($success == 1)
+        {
+            $email = Email::create([
+                'first_name' => $info->first_name,
+                'last_name' => $info->last_name,
+                'email' => $info->email,
+                'address_line_one' => $info->address_line_one,
+                'address_line_two' => $info->address_line_two,
+                'city' => $info->city,
+                'state' => $info->state,
+                'postal_code' => $info->postal_code,
+                'country' => $info->country,
+                'phone_number' => $info->phone_number,
+                'whatsapp' => $info->whatsapp,
+                'facebook' => $info->facebook,
+                'line' => $info->line,
+                'alternate_emails' => $info->alternate_emails,
+                'list_ids' => $info->list_ids,
+                'unique_name' => $info->unique_name,
+            ]);
+
+            $email->lists()->syncWithoutDetaching($info->clist);
+        }
+
+        return $success;
+
+
     }
 
     public function getSendgridId($contact)
@@ -72,13 +79,27 @@ class Contact
             "query"=> "email LIKE '{$contact->email}%'",
         ]);
 
-        $contact->update([
-            'sendgrid_id' => $response['result'][0]['id'],
-            'sendgrid_metadata' =>$response['result'][0]['_metadata']['self'],
-        ]);
+        $success = $response->successful();
+
+        if($success == 1)
+        {
+            $contact->update([
+                'sendgrid_id' => $response['result'][0]['id'],
+                'sendgrid_metadata' =>$response['result'][0]['_metadata']['self'],
+            ]);
+        }
+        return $success;
     }
 
+    public function deleteContact($email)
+    {
+        $url = $this->baseURL.'/v3/marketing/contacts';
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->delete($url . '?ids=' . $email);
 
+        return $response->successful();
+    }
 }
 
 

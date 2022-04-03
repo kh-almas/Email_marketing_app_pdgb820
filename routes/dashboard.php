@@ -3,7 +3,6 @@
 use App\Http\Controllers\backend\bounceController;
 use App\Http\Controllers\backend\emailController;
 use App\Http\Controllers\backend\emailListController;
-use App\Http\Controllers\backend\globalStatisticsController;
 use App\Http\Controllers\backend\senderVerificationController;
 use App\Http\Controllers\backend\SingleSendController;
 use App\Http\Controllers\backend\spamController;
@@ -24,6 +23,8 @@ Route::view('/multiselect','layouts.multiselect');
 
 Route::resource('/email',emailController::class);
 Route::resource('/email_list',emailListController::class);
+Route::post('/email_list/contact/{list_id}/remove/{email_id}', [emailListController::class, 'removeContactFromList'])->name('removeContactFromList');
+Route::post('/email_list/contact/{email_id}/add/{list_id}', [emailListController::class, 'addContactToList'])->name('addContactToList');
 Route::post('/get_sendgrid_id/{id}',[emailController::class, 'getSendgridId'])->name('email.getSendgridId');
 Route::resource('/single-sends',SingleSendController::class);
 Route::get('single-sends/view/mail/{mailId}',[SingleSendController::class , 'viewMail'])->name('viewMail');
@@ -38,5 +39,4 @@ Route::delete('/unsubscribe-group/destroy/{emailInfo}/{group_id}', [unsubscribeG
 Route::resource('/sender-verification',senderVerificationController::class);
 Route::resource('/spam', spamController::class);
 Route::get('/spam/list/update',[spamController::class, 'updateSpamList'])->name('spam.updatelist');
-Route::resource('/stats',globalStatisticsController::class);
 ///Route::get('/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend');

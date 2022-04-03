@@ -18,8 +18,14 @@ class bounceController extends Controller
 
     public function updateList()
     {
-        $this->bounces->updateList();
-        return redirect()->route('dashboard.bounce.index')->with('success','List updated');
+        $response = $this->bounces->updateList();
+//        if ($response == 1)
+//        {
+            return redirect()->route('dashboard.bounce.index')->with('success','List updated');
+//        }else{
+//            return redirect()->route('dashboard.bounce.index')->with('danger','Something is happened! with sendgrid configuration');
+//        }
+
     }
 
     /**
@@ -92,12 +98,18 @@ class bounceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Bounce  $bounce
-     * @return \Illuminate\Http\Response|void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Bounce $bounce)
     {
-        $this->bounces->deletebounce($bounce);
-        $bounce->delete();
-        return redirect()->route('dashboard.bounce.index')->With('danger', 'Email Deleted');
+        $response =$this->bounces->deletebounce($bounce);
+        if ($response == 1)
+        {
+            $bounce->delete();
+            return redirect()->route('dashboard.bounce.index')->With('danger', 'Email Deleted');
+        }else{
+            return redirect()->route('dashboard.bounce.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+
     }
 }

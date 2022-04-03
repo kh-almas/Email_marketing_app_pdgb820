@@ -19,7 +19,7 @@ class unsubscribeGroupsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -29,7 +29,7 @@ class unsubscribeGroupsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -40,19 +40,24 @@ class unsubscribeGroupsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $this->UnsubscribeGroup->createUnsubscribeGroup($request);
-        return redirect()->route('dashboard.unsubscribe-group.index')->with('success','Suppression Group added');
+        $response = $this->UnsubscribeGroup->createUnsubscribeGroup($request);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.unsubscribe-group.index')->with('success','Suppression Group added');
+        }else{
+            return redirect()->route('dashboard.bounce.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\UnsubscribeGroup  $unsubscribe_group
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(UnsubscribeGroup $unsubscribe_group)
     {
@@ -86,30 +91,40 @@ class unsubscribeGroupsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\UnsubscribeGroup  $suppression_group
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(UnsubscribeGroup $unsubscribe_group)
     {
-        $this->UnsubscribeGroup->deleteUnsubscribeGroup($unsubscribe_group->sendgrid_id);
-        $unsubscribe_group->delete();
-        return redirect()->route('dashboard.unsubscribe-group.index')->With('danger', 'suppression Group Deleted');
+        $response = $this->UnsubscribeGroup->deleteUnsubscribeGroup($unsubscribe_group->sendgrid_id);
+        if ($response == 1)
+        {
+            $unsubscribe_group->delete();
+            return redirect()->route('dashboard.unsubscribe-group.index')->With('danger', 'suppression Group Deleted');
+        }else{
+            return redirect()->route('dashboard.bounce.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\UnsubscribeGroup  $groupId
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateGroup(UnsubscribeGroup $groupId)
     {
-        $this->UnsubscribeGroup->retrieveAllSuppression($groupId);
-        return back()->with('info','List Updated');
+        $response = $this->UnsubscribeGroup->retrieveAllSuppression($groupId);
+        if ($response == 1)
+        {
+            return back()->with('info','List Updated');
+        }else{
+            return back()->with('danger','Something is happened! with sendgrid configuration');
+        }
+
     }
 
     public function addEmailToSuppression()
     {
-        $groupId = 17030;
         $fxbxcf = $this->UnsubscribeGroup->addEmailToSuppression($groupId);
         return $fxbxcf;
     }
@@ -117,7 +132,7 @@ class unsubscribeGroupsController extends Controller
     public function deleteEmailFromUnsubscribeGroup(UnsubscribeGroupsEmail $emailInfo, $group_id)
     {
         $response = $this->UnsubscribeGroup->deleteEmailFromUnsubscribeGroup($emailInfo, $group_id);
-        if ($response === true)
+        if ($response == 1)
         {
             $emailInfo->delete();
             return back()->With('danger', 'Email delete form this list');

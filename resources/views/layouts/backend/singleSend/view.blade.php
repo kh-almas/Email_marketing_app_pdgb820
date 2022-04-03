@@ -13,6 +13,16 @@
 
                     <div class="py-6">
                         <div class="py-4">
+                            <p><span class="font-semibold">Lists:</span></p>
+                        </div>
+
+
+                        <div class="p-4 w-full bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+                            @foreach($single_send->lists as $list)
+                                <p class="text-base text-gray-500 sm:text-lg dark:text-gray-400">{{ $list->name }}</p>
+                            @endforeach
+                        </div>
+                        <div class="py-4">
                             <p><span class="font-semibold">SendGrid Id:</span> {{ $single_send->sendgrid_id }}</p>
                         </div>
                         <div class="py-4">

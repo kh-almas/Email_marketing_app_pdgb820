@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('sendgrid:stats')->daily();
          $schedule->command('sendgrid:daily_stats')->everyMinute();
          $schedule->command('sendgrid:dashboard_stats')->everyMinute();
+         $schedule->command('sendgrid:spam')->everyMinute();
     }
 
     /**

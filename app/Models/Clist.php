@@ -20,4 +20,9 @@ class Clist extends Model
     {
         return $this->belongsToMany(Email::class);
     }
+
+    public function singleSend()
+    {
+        return $this->belongsToMany(SingleSend::class,'single_send_lists');
+    }
 }

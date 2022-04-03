@@ -2,6 +2,8 @@
 
 namespace App\Actions\SendGrid;
 
+use App\Models\Spam;
+use App\Models\UnsubscribeGroup;
 use Illuminate\Support\Facades\Http;
 
 
@@ -23,14 +25,24 @@ class Spam_Reporte
             'Authorization' => "Bearer {$this->apiKey}",
         ])->get($url);
 
-        dd($response->body());
+        $success = $response->successful();
+        if ($success == 1)
+        {
+            $forStore[] = [
+                'created'  => $response['id'],
+                'email' => $data['blocks'],
+                'ip' => $data['bounce_drops'],
+            ];
 
-//        UnsubscribeGroup::create([
-//            'sendgrid_id' => $response['id'],
-//            'name' => $response['name'],
-//            'description' => $response['description'],
-//            'is_default' => $response['is_default'],
-//        ]);
+            Spam::upsert($forStore, ['email'], ['created', 'email', 'ip', ]);
+        }
+        return $success;
+
+
+
+//        dd($response->body());
+
+
     }
 
     public function deleteSpam($email)
@@ -40,7 +52,6 @@ class Spam_Reporte
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
 
-//        dd($response->successful());
         return $response->successful();
     }
 }

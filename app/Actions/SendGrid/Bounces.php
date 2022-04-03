@@ -24,16 +24,22 @@ class Bounces
             'Accept' => "application/json",
         ])->get($url)->collect();
 
+//        $success = $response->successful();
+//
+//        if ($success == 1)
+//        {
+            foreach ($response as $data)
+            {
+                Bounce::firstOrCreate([
+                    'created' => $data['created'],
+                    'email' => $data['email'],
+                    'reason' => $data['reason'],
+                    'status' => $data['status'],
+                ]);
+            }
+//        }
 
-        foreach ($response as $data)
-        {
-            Bounce::firstOrCreate([
-                'created' => $data['created'],
-                'email' => $data['email'],
-                'reason' => $data['reason'],
-                'status' => $data['status'],
-            ]);
-        }
+//        return $success;
     }
 
     public function deletebounce($bounce)
@@ -43,9 +49,6 @@ class Bounces
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url. '?email_address='. $bounce->email);
 
-        if ($response->successful() == 0)
-        {
-            return 'Something happened with sendgrid configuration';
-        }
+        return $response->successful();
     }
 }

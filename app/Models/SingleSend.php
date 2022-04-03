@@ -14,7 +14,6 @@ class SingleSend extends Model
         'name',
         'status',
         'categories',
-        'list_ids',
         'segment_ids',
         'send_all',
         'subject',
@@ -29,4 +28,9 @@ class SingleSend extends Model
         'is_send',
         'send_at',
     ];
+
+    public function lists()
+    {
+        return $this->belongsToMany(Clist::class, 'single_send_lists');
+    }
 }

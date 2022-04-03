@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Actions\SendGrid\Contact;
 use App\Actions\SendGrid\ContactList;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\addemailListRequest;
 use App\Models\Clist;
+use App\Models\Email;
 use Illuminate\Http\Request;
 
 class emailListController extends Controller
 {
     private $list;
 
-    public function __construct(ContactList $contactList)
+    public function __construct(ContactList $contactList,)
     {
         $this->list = $contactList;
     }
@@ -42,12 +44,18 @@ class emailListController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(addemailListRequest $request)
     {
-        $this->list->addContactList($request->name);
-        return redirect()->route('dashboard.email_list.index')->with('success','Email list added');
+        $response = $this->list->addContactList($request->name);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email_list.index')->with('success','Email list added');
+        }else{
+            return redirect()->route('dashboard.email_list.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+
     }
 
     /**
@@ -78,23 +86,59 @@ class emailListController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Clist  $email_list
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Clist $email_list)
     {
-        $this->list->updateContactList($request->name, $email_list);
-        return redirect()->route('dashboard.email_list.index')->with('info','Email list updated');
+        $response = $this->list->updateContactList($request->name, $email_list);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email_list.index')->with('info','Email list updated');
+        }else{
+            return redirect()->route('dashboard.email_list.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Clist  $email_list
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Clist $email_list)
     {
-        $this->list->deleteContactList($email_list);
-        return redirect()->route('dashboard.email_list.index')->With('danger', 'Email list deleted');
+        $response = $this->list->deleteContactList($email_list);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email_list.index')->With('danger', 'Email list deleted');
+        }else{
+            return redirect()->route('dashboard.email_list.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+
+    }
+
+    public function removeContactFromList($list_id, $email_id)
+    {
+        $response = $this->list->removeContactFromList($list_id, $email_id);
+        if($response == 1)
+        {
+            $email = Email::where('sendgrid_id', $email_id)->first();
+            $list = Clist::where('sendgrid_id', $list_id)->first();
+            $list->email()->detach($email->id);
+            return redirect()->route('dashboard.email.index')->With('danger', 'Email removed from list');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+    }
+
+    public function addContactToList($email_id, $list_id)
+    {
+        $response = $this->list->addContactToList($email_id, $list_id);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email.index')->with('success','Email added to the list');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 }

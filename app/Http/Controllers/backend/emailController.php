@@ -25,8 +25,9 @@ class emailController extends Controller
      */
     public function index()
     {
+        $lists = Clist::latest()->get();
         $emails = Email::latest()->paginate('15');
-        return view('layouts.backend.email.index',compact('emails'));
+        return view('layouts.backend.email.index',compact('emails','lists'));
     }
 
     /**
@@ -48,8 +49,13 @@ class emailController extends Controller
      */
     public function store(Request $request)
     {
-        $this->contact->addContact($request);
-        return redirect()->route('dashboard.email.index')->with('success','Email Listed');
+        $response = $this->contact->addContact($request);
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email.index')->with('success','Email Listed');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     /**
@@ -114,15 +120,26 @@ class emailController extends Controller
      */
     public function destroy(Email $email)
     {
-        $this->contact->deleteContact($email->sendgrid_id);
+        $response = $this->contact->deleteContact($email->sendgrid_id);
         $email->lists()->detach();
         $email->delete();
-        return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 
     public function getSendgridId(Email $id)
     {
-        $this->contact->getSendgridId($id);
-        return redirect()->route('dashboard.email.index')->With('success', 'SendGrid ID Collected');
+        $response = $this->contact->getSendgridId($id);
+
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email.index')->With('success', 'SendGrid ID Collected');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
     }
 }

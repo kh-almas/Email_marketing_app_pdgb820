@@ -19,7 +19,6 @@ class CreateSingleSendsTable extends Migration
             $table->string('name');
             $table->string('status')->nullable();
             $table->string('categories')->nullable();
-            $table->string('list_ids');
             $table->string('segment_ids')->nullable();
             $table->boolean('send_all')->nullable();
             $table->string('subject');

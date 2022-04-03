@@ -27,20 +27,28 @@ class Unsubscribe_Group
             'description' => $info->description,
         ]);
 
-        UnsubscribeGroup::create([
-            'sendgrid_id' => $response['id'],
-            'name' => $response['name'],
-            'description' => $response['description'],
-            'is_default' => $response['is_default'],
-        ]);
+        $success = $response->successful();
+
+        if ($success == 1)
+        {
+            UnsubscribeGroup::create([
+                'sendgrid_id' => $response['id'],
+                'name' => $response['name'],
+                'description' => $response['description'],
+                'is_default' => $response['is_default'],
+            ]);
+        }
+        return $success;
     }
 
     public function deleteUnsubscribeGroup($group_id)
     {
         $url = $this->baseURL.'/v3/asm/groups/'.$group_id;
-        Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->delete($url);
+
+        return $response->successful();
     }
 
     public function retrieveAllSuppression($group_id)
@@ -50,12 +58,19 @@ class Unsubscribe_Group
             'Authorization' => "Bearer {$this->apiKey}",
         ])->get($url)->collect();
 
-        foreach ($response as $data)
+        $success = $response->successful();
+
+        if ($success == 1)
         {
-            $group_id->email()->firstOrCreate([
-                'email' => $data,
-            ]);
+            foreach ($response as $data)
+            {
+                $group_id->email()->firstOrCreate([
+                    'email' => $data,
+                ]);
+            }
         }
+
+        return $success;
     }
 
     public function deleteEmailFromUnsubscribeGroup($emailInfo, $group_id)
@@ -70,16 +85,16 @@ class Unsubscribe_Group
 
     public function addEmailToSuppression($group_id)
     {
-        $url = $this->baseURL.'/v3/asm/groups/17030/suppressions';
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-        ])->post($url, [
-            'recipient_emails' => [
-                'almas@gmail.com',
-                'prtg@gmail.com',
-            ],
-        ]);
-
-        dd($response->body());
+//        $url = $this->baseURL.'/v3/asm/groups/17030/suppressions';
+//        $response = Http::withHeaders([
+//            'Authorization' => "Bearer {$this->apiKey}",
+//        ])->post($url, [
+//            'recipient_emails' => [
+//                'almas@gmail.com',
+//                'prtg@gmail.com',
+//            ],
+//        ]);
+//
+//        dd($response->body());
     }
 }
