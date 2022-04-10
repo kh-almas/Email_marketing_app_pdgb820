@@ -51,6 +51,8 @@ class pNumberController extends Controller
 
     public function destroy(PhoneNumber $info)
     {
-        return $info;
+        $info->list()->detach();
+        $info->delete();
+        return redirect()->route('dashboard.phone_number.index')->With('danger', 'Contact Deleted');
     }
 }

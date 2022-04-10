@@ -43,6 +43,7 @@ class pListController extends Controller
 
     public function destroy(PList $group)
     {
+        $group->number()->detach();
         $group->delete();
         return redirect()->route('dashboard.group.index')->With('danger', 'Group Deleted');
     }
