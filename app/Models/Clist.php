@@ -25,4 +25,9 @@ class Clist extends Model
     {
         return $this->belongsToMany(SingleSend::class,'single_send_lists');
     }
+
+    public function campaign()
+    {
+        $this->belongsToMany(Campaign::class, 'campaign_list');
+    }
 }

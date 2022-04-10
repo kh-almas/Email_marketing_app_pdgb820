@@ -20,4 +20,9 @@ class UnsubscribeGroup extends Model
     {
         return $this->hasMany(UnsubscribeGroupsEmail::class, 'unsubscribe_group_id');
     }
+
+    public function campaign()
+    {
+        return $this->hasMany(Campaign::class, 'suppression_group_id');
+    }
 }

@@ -25,4 +25,10 @@ class SenderVerification extends Model
         'verified',
         'locked',
     ];
+
+
+    public function campaign()
+    {
+        return $this->hasMany(Campaign::class, 'sender_id');
+    }
 }
