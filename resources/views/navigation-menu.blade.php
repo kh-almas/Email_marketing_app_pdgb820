@@ -85,12 +85,6 @@
                             <x-jet-dropdown-link href="{{ route('dashboard.campaign.index') }}">
                                 {{ __('Marketing') }}
                             </x-jet-dropdown-link>
-
-                            <div class="border-t border-gray-100"></div>
-
-                            <x-jet-dropdown-link href="{{ route('dashboard.sms') }}">
-                                {{ __('SMS') }}
-                            </x-jet-dropdown-link>
                         </x-slot>
                     </x-jet-dropdown>
                 </div>
@@ -194,7 +188,7 @@
 
                             <div class="border-t border-gray-100"></div>
 
-                            <x-jet-dropdown-link href="{{ route('dashboard.sms') }}">
+                            <x-jet-dropdown-link href="{{ route('dashboard.sms.index') }}">
                                 {{ __('SMS') }}
                             </x-jet-dropdown-link>
                         </x-slot>

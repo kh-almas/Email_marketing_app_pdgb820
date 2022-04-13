@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\PList;
+use App\Models\Sms;
 use Illuminate\Http\Request;
-use Twilio\Rest\Client;
 
 class smsController extends Controller
 {
     public function index()
     {
+        $sms = Sms::latest()->paginate('15');
+        return view('layouts.backend.sms_call.sms.index', compact('sms'));
+
 //        $sid = "AC7ed7805ddbc9fd28846cecbf20bb8fd7";
 //        $token = "672edbfe70db1b6e9c5dcb44f6cf66dc";
 //        $twilio = new Client($sid, $token);
@@ -23,7 +27,7 @@ class smsController extends Controller
 //            );
 
 //        print($message->sid);
-        return $message;
+//        return $message;
 
 
 //        $sid = "ACXXXXXX"; // Your Account SID from www.twilio.com/console
@@ -39,5 +43,57 @@ class smsController extends Controller
 //                'url' => 'https://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient'
 //            ]
 //        );
+
+    }
+
+    public function create()
+    {
+        return view('layouts.backend.sms_call.sms.create');
+    }
+
+    public function store(Request $request)
+    {
+        Sms::create([
+            'name' => $request->name,
+            'sms' => $request->sms,
+        ]);
+        return redirect()->route('dashboard.sms.index')->with('success','Message Created');
+    }
+
+    public function show(Sms $sms)
+    {
+        return view('layouts.backend.sms_call.sms.view', compact('sms'));
+    }
+
+    public function edit(Sms $sms)
+    {
+        return view('layouts.backend.sms_call.sms.edit', compact('sms'));
+    }
+
+    public function update(Request $request, Sms $sms)
+    {
+        $sms->update([
+            'name' => $request->name,
+            'sms' => $request->sms,
+        ]);
+        return redirect()->route('dashboard.sms.index')->with('info','Message Updated');
+    }
+
+    public function destroy(Sms $sms)
+    {
+        $sms->delete();
+        return redirect()->route('dashboard.sms.index')->With('danger', 'Message Deleted');
+    }
+
+    public function sendTo(Sms $sms)
+    {
+        $lists = PList::latest()->get();
+        return view('layouts.backend.sms_call.sms.sendToView', compact('sms','lists'));
+    }
+
+    public function storeSendTo(Request $request, Sms $sms)
+    {
+        $sms->list()->sync($request->lists);
+        return redirect()->back();
     }
 }

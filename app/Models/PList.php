@@ -17,4 +17,9 @@ class PList extends Model
     {
         return $this->belongsToMany(PhoneNumber::class,'list_number');
     }
+
+    public function sms()
+    {
+        return $this->belongsToMany(Sms::class,'list_sms');
+    }
 }
