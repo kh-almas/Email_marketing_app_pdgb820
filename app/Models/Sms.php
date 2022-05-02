@@ -10,8 +10,10 @@ class Sms extends Model
     use HasFactory;
 
     protected $fillable = [
+        'identity',
         'name',
         'sms',
+        'unique_id',
     ];
 
     public function list()

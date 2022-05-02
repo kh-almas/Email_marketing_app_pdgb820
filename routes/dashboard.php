@@ -7,8 +7,6 @@ use App\Http\Controllers\backend\emailListController;
 use App\Http\Controllers\backend\pListController;
 use App\Http\Controllers\backend\pNumberController;
 use App\Http\Controllers\backend\senderVerificationController;
-use App\Http\Controllers\backend\sendingSmsController;
-use App\Http\Controllers\backend\sendingSmsGroupController;
 use App\Http\Controllers\backend\SingleSendController;
 use App\Http\Controllers\backend\smsController;
 use App\Http\Controllers\backend\spamController;
@@ -49,12 +47,11 @@ Route::resource('/mail/campaign',campaignController::class);
 ///Route::get('/sender-verification/get-all-single-send',[senderVerificationController::class , 'getAllSingleSend'])->name('getAllSingleSend');
 
 
-
-
 //Route::resource('/contact/phone_number',pNumberController::class);
 //Route::resource('/contact/phone_number/group',pListController::class);
 //Route::resource('/sms', smsController::class);
 //Route::resource('/sms_group', sendingSmsController::class);
+//Route::resource('/sender/identity', pSenderIdentityController::class);
 
 Route::get('dashboard/contact/phone_number/group', [pListController::class,'index'])->name('group.index');
 Route::post('/dashboard/contact/phone_number/group', [pListController::class,'store'])->name('group.store');
@@ -80,6 +77,7 @@ Route::put('/sms/{sms}', [smsController::class,'update'])->name('sms.update');
 Route::delete('/sms/{sms}', [smsController::class,'destroy'])->name('sms.destroy');
 Route::get('/sms_group/{sms}', [smsController::class,'sendTo'])->name('sms_group.show');
 Route::put('/sms_group/{sms}', [smsController::class,'storeSendTo'])->name('sms_group.store');
+Route::post('/sms_group/{sms}/send', [smsController::class,'send'])->name('sms_group.send');
 
 //Route::get('dashboard/sms_group', [sendingSmsGroupController::class,'index'])->name('sms_group.index');
 //Route::post('dashboard/sms_group', [sendingSmsGroupController::class,'store'])->name('sms_group.store');

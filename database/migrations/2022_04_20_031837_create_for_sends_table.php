@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sms', function (Blueprint $table) {
+        Schema::create('for_sends', function (Blueprint $table) {
             $table->id();
-            $table->string('identity');
-            $table->string('unique_id')->unique();
-            $table->string('name')->unique();
-            $table->string('sms');
+            $table->string('to')->unique();
+            $table->string('from');
+            $table->string('message');
+            $table->boolean('is_queue');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sms');
+        Schema::dropIfExists('for_sends');
     }
 };

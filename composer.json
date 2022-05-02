@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.5",
         "sendgrid/sendgrid": "^7.11",
-        "twilio/sdk": "^6.36"
+        "twilio/sdk": "^6.36",
+        "vonage/client": "^3.0"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

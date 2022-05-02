@@ -34,4 +34,15 @@ return [
         'apiKey' => env('SENDGRID_API_KEY'),
     ],
 
+    'twilio' => [
+        'account_sid' => env('TWILIO_ACCOUNT_SID'),
+        'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        'from' => env('TWILIO_FROM'),
+    ],
+
+    'vonage' => [
+        'apiKey' => env('VONAGE_API_KEY'),
+        'apiSecret' => env('VONAGE_API_SECRET'),
+    ],
+
 ];

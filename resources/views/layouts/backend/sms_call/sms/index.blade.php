@@ -57,6 +57,12 @@
                                                             <li>
                                                                 <a href="{{ route('dashboard.sms_group.show',$info->id) }}" class="flex justify-center py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Send to</a>
                                                             </li>
+                                                            <li>
+                                                                <form action="{{ route('dashboard.sms_group.send',$info->id) }}" method="POST">
+                                                                    @csrf
+                                                                    <button type="submit" onclick="return confirm('Wanna send message')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Send</button>
+                                                                </form>
+                                                            </li>
                                                         </ul>
                                                 </td>
                                             </tr>

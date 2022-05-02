@@ -11,6 +11,9 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="py-6">
                         <div class="py-4">
+                            <p><span class="font-semibold">Identity:</span> {{ $sms->identity }}</p>
+                        </div>
+                        <div class="py-4">
                             <p><span class="font-semibold">Name:</span> {{ $sms->name }}</p>
                         </div>
                         <div class="py-4">
