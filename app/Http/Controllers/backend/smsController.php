@@ -5,6 +5,8 @@ namespace App\Http\Controllers\backend;
 use App\Actions\Helpers\IdGenerator;
 use App\Actions\Vonage\Send_Sms;
 use App\Http\Controllers\Controller;
+use App\Models\FailedMessageCallback;
+use App\Models\MessageCallback;
 use App\Models\PList;
 use App\Models\Sms;
 use Illuminate\Http\Request;
@@ -85,5 +87,23 @@ class smsController extends Controller
     {
         $this->sendSms->for_send($sms);
         return back()->with('success','Message is ready for send. Sending will start in one minute');
+    }
+
+    public function successFeedback()
+    {
+        $all_data = MessageCallback::latest()->paginate('20');
+        return view('layouts.backend.sms_call.sms.successMessageFeedback', compact('all_data'));
+    }
+
+    public function failedFeedback()
+    {
+        $all_data = FailedMessageCallback::latest()->paginate('20');
+        return view('layouts.backend.sms_call.sms.failedMessageFeedback', compact('all_data'));
+    }
+
+    public function failedFeedbackRetry()
+    {
+        $this->sendSms->failed_retry();
+        return redirect()->route('dashboard.sms.index')->with('success','Message is ready for send. Sending will start in one minute');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Actions\Vonage;
 
 
+use App\Models\FailedMessageCallback;
 use App\Models\ForSend;
 use App\Models\MessageCallback;
 use App\Models\SendSms;
@@ -39,6 +40,22 @@ class Send_Sms
                     'is_queue' => 0,
                 ]);
             }
+        }
+
+    }
+
+    public function failed_retry()
+    {
+        $failed_list = FailedMessageCallback::all();
+        foreach ($failed_list as $list)
+        {
+            ForSend::create([
+                'to' => $list->to,
+                'from' => $list->from,
+                'message' => $list->message_body,
+                'is_queue' => 0,
+            ]);
+            $list->delete();
         }
 
     }
@@ -99,35 +116,68 @@ class Send_Sms
 
             $datas = $response['records'];
             foreach ($datas as $data) {
-                MessageCallback::create([
-                    'include_subaccounts' => $response['include_subaccounts'],
-                    'account_id' => $data['account_id'],
-                    'message_id' => $data['message_id'],
-                    'account_ref' => $data['account_ref'],
-                    'client_ref' => $data['client_ref'],
-                    'direction' => $data['direction'],
-                    'from' => $data['from'],
-                    'to' => $data['to'],
-                    'forced_from' => $data['forced_from'],
-                    'message_body' => $data['message_body'],
-                    'concatenated' => $data['concatenated'],
-                    'network' => $data['network'],
-                    'network_name' => $data['network_name'],
-                    'country' => $data['country'],
-                    'country_name' => $data['country_name'],
-                    'date_received' => $data['date_received'],
-                    'date_finalized' => $data['date_finalized'],
-                    'latency' => $data['latency'],
-                    'status' => $data['status'],
-                    'error_code' => $data['error_code'],
-                    'error_code_description' => $data['error_code_description'],
-                    'currency' => $data['currency'],
-                    'total_price' => $data['total_price'],
-                    'm_id' => $data['id'],
-                    'dcs' => $data['dcs'],
-                    'validity_period' => $data['validity_period'],
-                    'ip_address' => $data['ip_address'],
-                ]);
+                if($data['status'] === "delivered" || $data['error_code'] === 0)
+                {
+                    MessageCallback::create([
+                        'include_subaccounts' => $response['include_subaccounts'],
+                        'account_id' => $data['account_id'],
+                        'message_id' => $data['message_id'],
+                        'account_ref' => $data['account_ref'],
+                        'client_ref' => $data['client_ref'],
+                        'direction' => $data['direction'],
+                        'from' => $data['from'],
+                        'to' => $data['to'],
+                        'forced_from' => $data['forced_from'],
+                        'message_body' => $data['message_body'],
+                        'concatenated' => $data['concatenated'],
+                        'network' => $data['network'],
+                        'network_name' => $data['network_name'],
+                        'country' => $data['country'],
+                        'country_name' => $data['country_name'],
+                        'date_received' => $data['date_received'],
+                        'date_finalized' => $data['date_finalized'],
+                        'latency' => $data['latency'],
+                        'status' => $data['status'],
+                        'error_code' => $data['error_code'],
+                        'error_code_description' => $data['error_code_description'],
+                        'currency' => $data['currency'],
+                        'total_price' => $data['total_price'],
+                        'm_id' => $data['id'],
+                        'dcs' => $data['dcs'],
+                        'validity_period' => $data['validity_period'],
+                        'ip_address' => $data['ip_address'],
+                    ]);
+                }else{
+                    FailedMessageCallback::create([
+                        'include_subaccounts' => $response['include_subaccounts'],
+                        'account_id' => $data['account_id'],
+                        'message_id' => $data['message_id'],
+                        'account_ref' => $data['account_ref'],
+                        'client_ref' => $data['client_ref'],
+                        'direction' => $data['direction'],
+                        'from' => $data['from'],
+                        'to' => $data['to'],
+                        'forced_from' => $data['forced_from'],
+                        'message_body' => $data['message_body'],
+                        'concatenated' => $data['concatenated'],
+                        'network' => $data['network'],
+                        'network_name' => $data['network_name'],
+                        'country' => $data['country'],
+                        'country_name' => $data['country_name'],
+                        'date_received' => $data['date_received'],
+                        'date_finalized' => $data['date_finalized'],
+                        'latency' => $data['latency'],
+                        'status' => $data['status'],
+                        'error_code' => $data['error_code'],
+                        'error_code_description' => $data['error_code_description'],
+                        'currency' => $data['currency'],
+                        'total_price' => $data['total_price'],
+                        'm_id' => $data['id'],
+                        'dcs' => $data['dcs'],
+                        'validity_period' => $data['validity_period'],
+                        'ip_address' => $data['ip_address'],
+                    ]);
+                }
 
                 $sms->delete();
             }
