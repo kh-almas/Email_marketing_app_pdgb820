@@ -25,6 +25,9 @@
                             <li>
                                 <a href="{{ route('dashboard.sms.send.failed') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Failed</a>
                             </li>
+                            <li>
+                                <a href="{{ route('dashboard.sms.send.queue') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Queued</a>
+                            </li>
                         </ul>
                     </div>
 

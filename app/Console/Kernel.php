@@ -16,12 +16,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();everyMinute
-         $schedule->command('sendgrid:stats')->daily();
-         $schedule->command('sendgrid:daily_stats')->everyMinute();
-         $schedule->command('sendgrid:dashboard_stats')->everyMinute();
-         $schedule->command('sendgrid:spam')->everyMinute();
-         $schedule->command('sms:send')->everyMinute();
-         $schedule->command('sms:callback')->everyMinute();
+         $schedule->command('sendgrid:stats')->daily()->withoutOverlapping();
+         $schedule->command('sendgrid:daily_stats')->everyMinute()->withoutOverlapping();
+         $schedule->command('sendgrid:dashboard_stats')->everyMinute()->withoutOverlapping();
+         $schedule->command('sendgrid:spam')->everyMinute()->withoutOverlapping();
+         $schedule->command('sms:send')->everyMinute()->withoutOverlapping();
+         $schedule->command('sms:callback')->everyMinute()->withoutOverlapping();
     }
 
     /**

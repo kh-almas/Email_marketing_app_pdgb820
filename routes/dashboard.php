@@ -79,8 +79,12 @@ Route::get('/sms_group/{sms}', [smsController::class,'sendTo'])->name('sms_group
 Route::put('/sms_group/{sms}', [smsController::class,'storeSendTo'])->name('sms_group.store');
 Route::post('/sms_group/{sms}/send', [smsController::class,'send'])->name('sms_group.send');
 Route::get('/sms/send/success', [smsController::class,'successFeedback'])->name('sms.send.success');
+Route::delete('/sms/send/success/{send}', [smsController::class,'deleteSuccessFeedback'])->name('sms.send.success.delete');
 Route::get('/sms/send/failed', [smsController::class,'failedFeedback'])->name('sms.send.failed');
+Route::delete('/sms/send/failed', [smsController::class,'deleteFailedFeedback'])->name('sms.send.failed.delete');
 Route::get('/sms/send/failed/retry', [smsController::class,'failedFeedbackRetry'])->name('sms.send.failed.retry');
+Route::get('/sms/send/queue', [smsController::class,'queueMessage'])->name('sms.send.queue');
+Route::delete('/sms/send/queue/{send}', [smsController::class,'deleteQueueMessage'])->name('sms.send.queue.delete');
 
 //Route::get('dashboard/sms_group', [sendingSmsGroupController::class,'index'])->name('sms_group.index');
 //Route::post('dashboard/sms_group', [sendingSmsGroupController::class,'store'])->name('sms_group.store');

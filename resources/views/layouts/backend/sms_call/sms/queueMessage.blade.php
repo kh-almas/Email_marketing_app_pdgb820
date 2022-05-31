@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Complete sms sending') }}
+            {{ __('Queued sms for sending') }}
         </h2>
     </x-slot>
 
@@ -28,28 +28,7 @@
                                                 From
                                             </th>
                                             <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Message Id
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Concatenated
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Network Name
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Country Name
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Date Received
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Date Finalized
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Currency
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
-                                                Total Price
+                                                Message
                                             </th>
                                         </tr>
                                         </thead>
@@ -58,7 +37,7 @@
                                         @forelse($all_data as $info)
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                 <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                                    <form action="{{ route('dashboard.sms.send.success.delete',$info->id) }}" method="POST">
+                                                    <form action="{{ route('dashboard.sms.send.queue.delete',$info->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" onclick="return confirm('Wanna delete message')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
@@ -71,28 +50,7 @@
                                                     <p>{{ $info->from }}</p>
                                                 </td>
                                                 <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->message_id }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->concatenated }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->network_name }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->country_name }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->date_received }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->date_finalized }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->currency }}</p>
-                                                </td>
-                                                <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <p>{{ $info->total_price }}</p>
+                                                    <p>{{ $info->message }}</p>
                                                 </td>
                                             </tr>
                                         @empty

@@ -10,7 +10,6 @@ class FailedMessageCallback extends Model
     use HasFactory;
 
     protected $fillable = [
-        'try',
         'include_subaccounts',
         'account_id',
         'message_id',

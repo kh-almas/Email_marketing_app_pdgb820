@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('for_sends', function (Blueprint $table) {
             $table->id();
-            $table->string('to')->unique();
+            $table->string('to');
             $table->string('from');
             $table->string('message');
             $table->boolean('is_queue');

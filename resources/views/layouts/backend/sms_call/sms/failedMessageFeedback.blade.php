@@ -70,7 +70,7 @@
                                         @forelse($all_data as $info)
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                 <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                                    <form action="{{ route('dashboard.sms.destroy',$info->id) }}" method="POST">
+                                                    <form action="{{ route('dashboard.sms.send.failed.delete',$info->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" onclick="return confirm('Wanna delete message')" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('failed_message_callbacks', function (Blueprint $table) {
             $table->id();
-            $table->integer('try')->default(0);
             $table->string('include_subaccounts')->nullable();
             $table->string('account_id')->nullable();
             $table->string('message_id')->nullable();

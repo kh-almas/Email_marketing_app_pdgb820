@@ -62,7 +62,7 @@ class Send_Sms
 
     public function send()
     {
-        $all_sms = ForSend::all();
+        $all_sms = ForSend::take(50)->get();
 
         foreach ($all_sms as $sms)
         {
@@ -73,6 +73,7 @@ class Send_Sms
                     "$sms->message")
             );
             $sms->delete();
+            sleep(1);
         }
 
 

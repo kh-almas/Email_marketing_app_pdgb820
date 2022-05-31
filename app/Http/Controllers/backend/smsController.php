@@ -6,6 +6,7 @@ use App\Actions\Helpers\IdGenerator;
 use App\Actions\Vonage\Send_Sms;
 use App\Http\Controllers\Controller;
 use App\Models\FailedMessageCallback;
+use App\Models\ForSend;
 use App\Models\MessageCallback;
 use App\Models\PList;
 use App\Models\Sms;
@@ -85,6 +86,16 @@ class smsController extends Controller
 
     public function send(Sms $sms)
     {
+//        $sdfgsdf = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s',];
+//
+//        foreach ($sdfgsdf as $xcfvb)
+//        {
+//            echo($xcfvb).'</br>';
+//            sleep(1);
+//        }
+//        //$data = ForSend::take(10)->get();
+//        ///sleep(10);//wait (sleep)for 10 seconds
+//        //return $data;
         $this->sendSms->for_send($sms);
         return back()->with('success','Message is ready for send. Sending will start in one minute');
     }
@@ -95,10 +106,34 @@ class smsController extends Controller
         return view('layouts.backend.sms_call.sms.successMessageFeedback', compact('all_data'));
     }
 
+    public function deleteSuccessFeedback(MessageCallback $send)
+    {
+        $send->delete();
+        return redirect()->back()->with('success' , 'Item deleted');
+    }
+
     public function failedFeedback()
     {
         $all_data = FailedMessageCallback::latest()->paginate('20');
         return view('layouts.backend.sms_call.sms.failedMessageFeedback', compact('all_data'));
+    }
+
+    public function deleteFailedFeedback(FailedMessageCallback $send)
+    {
+        $send->delete();
+        return redirect()->back()->with('success' , 'Item deleted');
+    }
+
+    public function queueMessage()
+    {
+        $all_data = ForSend::latest()->paginate('20');
+        return view('layouts.backend.sms_call.sms.queueMessage', compact('all_data'));
+    }
+
+    public function deleteQueueMessage(ForSend $send)
+    {
+        $send->delete();
+        return redirect()->back()->with('success' , 'Item deleted');
     }
 
     public function failedFeedbackRetry()
