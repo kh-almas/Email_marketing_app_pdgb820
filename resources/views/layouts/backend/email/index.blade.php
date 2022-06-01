@@ -55,6 +55,12 @@
                                                 </form>
                                             </div>
                                             <div>
+                                                <form action="{{ route('dashboard.email.getSendgridId',$email->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Get ID from sendgrid</button>
+                                                </form>
+                                            </div>
+                                            <div>
                                                 <button class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full" type="button" data-modal-toggle="popup-modal{{$email->id}}">
                                                     List
                                                 </button>
@@ -89,7 +95,7 @@
                                                                                     <div>
                                                                                         @foreach($list->email as $p_list)
                                                                                             @if($p_list->id === $email->id)
-                                                                                                <form action="{{ route('dashboard.removeContactFromList', ['list_id' => $list->sendgrid_id, 'email_id' => $email->sendgrid_id]) }}" method="POST">
+                                                                                                <form action="{{ route('dashboard.removeContactFromList', ['list_id' => $list->sendgrid_id, 'email_id' => $email->id]) }}" method="POST">
                                                                                                     @csrf
                                                                                                     <button type="submit" class="w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded"><span><i class="fa-solid fa-xmark"></i></span></button>
                                                                                                 </form>

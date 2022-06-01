@@ -121,13 +121,15 @@ class emailController extends Controller
     public function destroy(Email $email)
     {
         $response = $this->contact->deleteContact($email->sendgrid_id);
-        $email->lists()->detach();
-        $email->delete();
+
         if ($response == 1)
         {
+            $email->lists()->detach();
+            $email->delete();
             return redirect()->route('dashboard.email.index')->With('danger', 'Email Deleted');
         }else{
-            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+            $this->contact->getSendgridId($email);
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration! try again.');
         }
     }
 

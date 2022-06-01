@@ -65,29 +65,6 @@ class unsubscribeGroupsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\UnsubscribeGroup  $suppression_group
@@ -113,13 +90,8 @@ class unsubscribeGroupsController extends Controller
      */
     public function updateGroup(UnsubscribeGroup $groupId)
     {
-        $response = $this->UnsubscribeGroup->retrieveAllSuppression($groupId);
-        if ($response == 1)
-        {
-            return back()->with('info','List Updated');
-        }else{
-            return back()->with('danger','Something is happened! with sendgrid configuration');
-        }
+        $this->UnsubscribeGroup->retrieveAllEmail($groupId);
+        return back()->with('info','List Updated');
 
     }
 
