@@ -24,25 +24,20 @@ class Spam_Reporte
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
         ])->get($url);
+        return $response;
 
-        $success = $response->successful();
-        if ($success == 1)
-        {
-            $forStore[] = [
-                'created'  => $response['id'],
-                'email' => $data['blocks'],
-                'ip' => $data['bounce_drops'],
-            ];
-
-            Spam::upsert($forStore, ['email'], ['created', 'email', 'ip', ]);
-        }
-        return $success;
-
-
-
-//        dd($response->body());
-
-
+//        $success = $response->successful();
+//        if ($success == 1)
+//        {
+//            $forStore[] = [
+//                'created'  => $response['id'],
+//                'email' => $data['blocks'],
+//                'ip' => $data['bounce_drops'],
+//            ];
+//
+//            Spam::upsert($forStore, ['email'], ['created', 'email', 'ip', ]);
+//        }
+//        return $success;
     }
 
     public function deleteSpam($email)

@@ -19,9 +19,9 @@ class Contact
     public function addContact($info)
     {
         $sendgrid_list = [];
-        $dfd = Clist::whereIn('id', $info->clist)->get();
-        foreach ($dfd as $dfdd){
-            $sendgrid_list[] = $dfdd->sendgrid_id;
+        $lists = Clist::whereIn('id', $info->clist)->get();
+        foreach ($lists as $list){
+            $sendgrid_list[] = $list->sendgrid_id;
         }
 
         $url = $this->baseURL.'/v3/marketing/contacts';
@@ -66,8 +66,58 @@ class Contact
         }
 
         return $success;
+    }
 
+    public function updateContact($info, $email)
+    {
+        $sendgrid_list = [];
+        $lists = Clist::whereIn('id', $info->clist)->get();
+        foreach ($lists as $list){
+            $sendgrid_list[] = $list->sendgrid_id;
+        }
 
+        $url = $this->baseURL.'/v3/marketing/contacts';
+
+        $data = [
+            'list_ids' => $sendgrid_list,
+            'contacts' => [
+                [
+                    'email' => $email->email,
+                ]
+            ],
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->put($url, $data);
+
+        $success = $response->successful();
+
+        if ($success == 1)
+        {
+            $email = Email::create([
+                'first_name' => $info->first_name,
+                'last_name' => $info->last_name,
+                'email' => $email->email,
+                'address_line_one' => $info->address_line_one,
+                'address_line_two' => $info->address_line_two,
+                'city' => $info->city,
+                'state' => $info->state,
+                'postal_code' => $info->postal_code,
+                'country' => $info->country,
+                'phone_number' => $info->phone_number,
+                'whatsapp' => $info->whatsapp,
+                'facebook' => $info->facebook,
+                'line' => $info->line,
+                'alternate_emails' => $info->alternate_emails,
+                'list_ids' => $info->list_ids,
+                'unique_name' => $info->unique_name,
+            ]);
+
+            $email->lists()->sync($info->clist);
+        }
+
+        return $success;
     }
 
     public function getSendgridId($contact)
@@ -85,7 +135,7 @@ class Contact
         {
             $contact->update([
                 'sendgrid_id' => $response['result'][0]['id'],
-                'sendgrid_metadata' =>$response['result'][0]['_metadata']['self'],
+                'sendgrid_metadata' => $response['result'][0]['_metadata']['self'],
             ]);
         }
         return $success;

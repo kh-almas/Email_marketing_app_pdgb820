@@ -9,8 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="py-6">
+                    @include('sessionMessage')
 
+                    <div class="py-6">
                         <div class="py-4">
                             <p><span class="font-semibold">Name: {{$email_list->name}}</span> </p>
                         </div>
@@ -64,8 +65,6 @@
                                     <td class="py-4 px-6">There is no single send in this lists.</td>
                                 </tr>
                             @endforelse
-
-
                             </tbody>
                         </table>
                     </div>
@@ -98,10 +97,18 @@
                                         <a href="{{ route('dashboard.email.show',$email->id) }}">{{ $email->email }}</a>
                                     </td>
                                     <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                        <form action="{{ route('dashboard.removeContactFromList', ['list_id' => $email_list->sendgrid_id, 'email_id' => $email->sendgrid_id]) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" onclick="return confirm('Wanna remove email from list')" class=" py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
-                                        </form>
+                                        @if(!empty($email->sendgrid_id))
+                                            <form action="{{ route('dashboard.removeContactFromList', ['list_sendgrid_id' => $email_list->sendgrid_id, 'email' => $email->id]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" onclick="return confirm('Wanna remove email from list')" class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
+                                            </form>
+                                        @endif
+                                        @if(empty($email->sendgrid_id))
+                                            <form action="{{ route('dashboard.email.getSendgridId',$email->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Get ID from sendgrid</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

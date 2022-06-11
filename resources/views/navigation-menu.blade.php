@@ -142,11 +142,11 @@
                                 {{ __('Bounces') }}
                             </x-jet-dropdown-link>
 
-                            <div class="border-t border-gray-100"></div>
+{{--                            <div class="border-t border-gray-100"></div>--}}
 
-                            <x-jet-dropdown-link href="{{ route('dashboard.spam.index') }}">
-                                {{ __('Spam Reports') }}
-                            </x-jet-dropdown-link>
+{{--                            <x-jet-dropdown-link href="{{ route('dashboard.spam.index') }}">--}}
+{{--                                {{ __('Spam Reports') }}--}}
+{{--                            </x-jet-dropdown-link>--}}
 
                             <div class="border-t border-gray-100"></div>
 

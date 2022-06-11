@@ -19,23 +19,12 @@ class SingleSendController extends Controller
         $this->singleSend = $singleSend;
     }
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response|string
-     */
     public function index()
     {
         $singleSends = SingleSend::latest()->paginate('15');
         return view('layouts.backend.singleSend.index',compact('singleSends'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function create()
     {
         $contactList = Clist::latest()->get();
@@ -44,26 +33,16 @@ class SingleSendController extends Controller
         return view('layouts.backend.singleSend.create',compact('contactList','suppression_group_id','sender'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
-
         $response = $this->singleSend->addSingleSend($request);
-        return $response;
         if ($response == 1)
         {
             return redirect()->route('dashboard.single-sends.index')->with('success','Single send Listed');
         }else{
             return redirect()->route('dashboard.single-sends.index')->with('danger','Something is happened! with sendgrid configuration');
         }
-
     }
-
 
     public function updateSchedule(Request $request)
     {

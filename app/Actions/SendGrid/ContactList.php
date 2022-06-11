@@ -69,14 +69,10 @@ class ContactList
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
-        ])->delete($url);
+        ])->delete($url . '?delete_contacts=' . 1);
 
         $success = $response->successful();
 
-        if($success == 1)
-        {
-            $email_list->delete();
-        }
         return $success;
     }
 
@@ -109,7 +105,6 @@ class ContactList
             $sendgrid_list[] = $lists->sendgrid_id;
         }
         $sendgrid_list[] = $list->sendgrid_id;
-//        return $sendgrid_list;
 
         $url = $this->baseURL.'/v3/marketing/contacts';
 
@@ -126,24 +121,49 @@ class ContactList
             'Authorization' => "Bearer {$this->apiKey}",
         ])->put($url, $data);
 
-
         $success = $response->successful();
-
         if($success == 1)
         {
             $list->email()->syncWithoutDetaching($email_id);
         }
-
         return $success;
     }
 
-    public function removeContactFromList($list_id, $email_id)
+    public function removeContactFromList($list_sendgrid_id, $email)
     {
-        $url = $this->baseURL.'/v3/marketing/lists/'.$list_id.'/contacts';
+
+
+        $url = $this->baseURL.'/v3/marketing/lists/'.$list_sendgrid_id.'/contacts';
+
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
-        ])->delete($url . '?contact_ids=' . $email_id);
+        ])->delete($url . '?contact_ids=' . $email->sendgrid_id);
 
-        return $response->successful();
+//        $email->detach();
+
+        return $response;
+
+    }
+
+    public function deleteContactFromList($list_id, $email_id)
+    {
+        $url = $this->baseURL.'/v3/contactdb/lists/'.$list_id.'/recipients/'.$email_id;
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->delete($url . '?list_id=' . $list_id . '?recipient_id=' . $email_id);
+
+        return $response;
+    }
+
+    public function importContactStatus()//$job_id
+    {
+        $url = $this->baseURL.'/v3/marketing/contacts/imports/ac9ffc24-ce0b-4b9f-86e9-e63116c1446e';
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$this->apiKey}",
+        ])->get($url);
+
+        return $response;
     }
 }

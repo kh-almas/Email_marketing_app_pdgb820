@@ -95,7 +95,7 @@
                                                                                     <div>
                                                                                         @foreach($list->email as $p_list)
                                                                                             @if($p_list->id === $email->id)
-                                                                                                <form action="{{ route('dashboard.removeContactFromList', ['list_id' => $list->sendgrid_id, 'email_id' => $email->id]) }}" method="POST">
+                                                                                                <form action="{{ route('dashboard.deleteContactFromList', ['list_id' => $list->sendgrid_id, 'email_id' => $email->id]) }}" method="POST">
                                                                                                     @csrf
                                                                                                     <button type="submit" class="w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded"><span><i class="fa-solid fa-xmark"></i></span></button>
                                                                                                 </form>

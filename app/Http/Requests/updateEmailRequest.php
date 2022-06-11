@@ -26,7 +26,7 @@ class updateEmailRequest extends FormRequest
         return [
             'first_name' => 'nullable|max:50',
             'last_name' => 'nullable|max:50',
-            'email' => 'required|max:200',
+//            'email' => 'required|max:200',
             'address_line_one' => 'nullable|max:200',
             'address_line_two' => 'nullable|max:200',
             'city' => 'nullable|max:50',
@@ -51,8 +51,8 @@ class updateEmailRequest extends FormRequest
         return [
             'first_name.max' => 'First name should under 50 characters',
             'last_name.max' => 'Last name should under 50 characters',
-            'email.required' => 'Email is requires',
-            'email.max' => 'Email should under 50 characters',
+//            'email.required' => 'Email is requires',
+//            'email.max' => 'Email should under 50 characters',
             'address_line_one.max' => 'Address line one should under 50 characters',
             'address_line_two.max' => 'Address line two should under 50 characters',
             'city.max' => 'City should under 50 characters',

@@ -24,22 +24,15 @@ class Bounces
             'Accept' => "application/json",
         ])->get($url)->collect();
 
-//        $success = $response->successful();
-//
-//        if ($success == 1)
-//        {
-            foreach ($response as $data)
-            {
-                Bounce::firstOrCreate([
-                    'created' => $data['created'],
-                    'email' => $data['email'],
-                    'reason' => $data['reason'],
-                    'status' => $data['status'],
-                ]);
-            }
-//        }
-
-//        return $success;
+        foreach ($response as $data)
+        {
+            Bounce::firstOrCreate([
+                'created' => $data['created'],
+                'email' => $data['email'],
+                'reason' => $data['reason'],
+                'status' => $data['status'],
+            ]);
+        }
     }
 
     public function deletebounce($bounce)

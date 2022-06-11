@@ -77,7 +77,8 @@ class emailController extends Controller
      */
     public function edit(Email $email)
     {
-        return view('layouts.backend.email.edit',compact('email'));
+        $contactList = Clist::all();
+        return view('layouts.backend.email.edit',compact('email','contactList'));
     }
 
     /**
@@ -87,29 +88,18 @@ class emailController extends Controller
      * @param  \App\Models\Email  $email
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(updateEmailRequest $request, Email $email)
+    public function update(Request $request, Email $email)//updateEmailRequest
     {
-        $email->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'address_line_one' => $request->address_line_one,
-            'address_line_two' => $request->address_line_two,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'phone_number' => $request->phone_number,
-            'whatsapp' => $request->whatsapp,
-            'facebook' => $request->facebook,
-            'line' => $request->line,
-            'alternate_emails' => $request->alternate_emails,
-            'list_ids' => $request->list_ids,
-            'unique_name' => $request->unique_name,
-            'sendgrid_id' => $request->sendgrid_id,
-            'sendgrid_metadata' => $request->sendgrid_metadata,
-        ]);
-        return redirect()->route('dashboard.email.index')->with('info','Email Updated');
+        $response = $this->contact->updateContact($request, $email);
+
+        if ($response == 1)
+        {
+            return redirect()->route('dashboard.email.index')->with('info','Email Updated');
+        }else{
+            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+        }
+
+
     }
 
     /**
@@ -139,9 +129,9 @@ class emailController extends Controller
 
         if ($response == 1)
         {
-            return redirect()->route('dashboard.email.index')->With('success', 'SendGrid ID Collected');
+            return back()->With('success', 'SendGrid ID Collected');
         }else{
-            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+            return back()->with('danger','Something is happened! with sendgrid configuration');
         }
     }
 }

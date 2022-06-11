@@ -27,7 +27,15 @@ Route::view('/multiselect','layouts.multiselect');
 
 Route::resource('/email',emailController::class);
 Route::resource('/email_list',emailListController::class);
-Route::post('/email_list/contact/{list_id}/remove/{email_id}', [emailListController::class, 'removeContactFromList'])->name('removeContactFromList');
+
+
+
+Route::post('/email_list/contact/{list_sendgrid_id}/remove/{email}', [emailListController::class, 'removeContactFromList'])->name('removeContactFromList');
+
+Route::get('/contacts/job/status',[emailListController::class , 'jobStatus'])->name('jobStatus');
+
+
+Route::post('/email_list/contact/{list_id}/delete/{email_id}', [emailListController::class, 'deleteContactFromList'])->name('deleteContactFromList');
 Route::post('/email_list/contact/{email_id}/add/{list_id}', [emailListController::class, 'addContactToList'])->name('addContactToList');
 Route::post('/get_sendgrid_id/{id}',[emailController::class, 'getSendgridId'])->name('email.getSendgridId');
 Route::resource('/single-sends',SingleSendController::class);

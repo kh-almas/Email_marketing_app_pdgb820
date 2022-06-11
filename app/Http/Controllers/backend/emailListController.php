@@ -110,6 +110,9 @@ class emailListController extends Controller
         $response = $this->list->deleteContactList($email_list);
         if ($response == 1)
         {
+            $email_list->email()->detach();
+            $email_list->singleSend()->detach();
+            $email_list->delete();
             return redirect()->route('dashboard.email_list.index')->With('danger', 'Email list deleted');
         }else{
             return redirect()->route('dashboard.email_list.index')->with('danger','Something is happened! with sendgrid configuration');
@@ -117,9 +120,47 @@ class emailListController extends Controller
 
     }
 
-    public function removeContactFromList($list_id, $email_id)
+
+
+
+
+    public function removeContactFromList($list_sendgrid_id, Email $email)
     {
-        $response = $this->list->removeContactFromList($list_id, $email_id);
+
+
+        $response = $this->list->removeContactFromList($list_sendgrid_id , $email);
+        return $response;
+//        if($response == 1)
+//        {
+////            $email = Email::where('sendgrid_id', $email_id)->first();
+////            $list = Clist::where('sendgrid_id', $list_id)->first();
+////            $list->email()->detach($email->id);
+//            return redirect()->route('dashboard.email.index')->With('danger', 'Email removed from list');
+//        }else{
+//            return redirect()->route('dashboard.email.index')->with('danger','Something is happened! with sendgrid configuration');
+//        }
+    }
+
+
+
+    public function jobStatus()
+    {
+        $response = $this->list->importContactStatus();
+        return $response;
+
+    }
+
+
+
+
+
+
+
+
+    public function deleteContactFromList($list_id, $email_id)
+    {
+        $response = $this->list->deleteContactFromList($list_id, $email_id);
+        return $response;
         if($response == 1)
         {
             $email = Email::where('sendgrid_id', $email_id)->first();

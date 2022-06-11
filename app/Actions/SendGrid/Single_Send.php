@@ -73,8 +73,6 @@ class Single_Send
                 'ip_pool' => $response['email_config']['ip_pool'],
                 'editor' => $response['email_config']['editor'],
             ]);
-//            return $response['send_to']['list_ids'];
-
             $forList->lists()->syncWithoutDetaching($Id);
         }
 
@@ -86,7 +84,7 @@ class Single_Send
     {
         $url = $this->baseURL.'/v3/marketing/singlesends/'.$singleSendID.'/schedule';
 
-        $dateTime = now()->addSeconds('300');
+        $dateTime = now()->addSeconds('30');
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}",
@@ -240,6 +238,4 @@ class Single_Send
 
         return $response->successful();
     }
-
-
 }

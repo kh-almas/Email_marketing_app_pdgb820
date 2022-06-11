@@ -68,7 +68,6 @@ class Sender_Verification
         return $response->successful();
     }
 
-
     public function getAllSingleSend()
     {
         $url = $this->baseURL.'/v3/verified_senders';
@@ -102,7 +101,6 @@ class Sender_Verification
         }
         return $success;
     }
-
 
     public function domainWarnList()
     {

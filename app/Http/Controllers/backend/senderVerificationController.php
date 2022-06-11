@@ -17,33 +17,17 @@ class senderVerificationController extends Controller
         $this->sender = $sender;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $senderVerification = SenderVerification::latest()->paginate('15');
         return view('layouts.backend.senderVerification.index',compact('senderVerification'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function create()
     {
         return view('layouts.backend.senderVerification.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param addSenderVerificationRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(addSenderVerificationRequest $request)
     {
         $response =$this->sender->createSenderVerification($request);
@@ -56,49 +40,14 @@ class senderVerificationController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SenderVerification $sender_verification
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function show(SenderVerification $sender_verification)
     {
         return view('layouts.backend.senderVerification.view',compact('sender_verification'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //abort('404');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //abort('404');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SenderVerification $sender_verification
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy(SenderVerification $sender_verification)
     {
-        $this->sender->deleteSenderVerification($sender_verification->sendgrid_id);
+        $response = $this->sender->deleteSenderVerification($sender_verification->sendgrid_id);
 
         if ($response == 1)
         {
